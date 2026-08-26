@@ -155,11 +155,7 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
-    /**
-     * Empaqueta todos los datos capturados en el formulario dentro de un Intent,
-     * abre la pantalla de previsualización de perfil y cierra esta Activity con
-     * finish() para que el usuario no pueda volver al formulario con el botón "atrás".
-     */
+
     private fun irAPerfilPreview() {
         val nombre = findViewById<TextInputEditText>(R.id.et_nombre).text.toString()
         val correo = findViewById<TextInputEditText>(R.id.et_correo).text.toString()
@@ -177,19 +173,23 @@ class MainActivity : AppCompatActivity() {
 
         val intereses = interesesSeleccionados.joinToString(", ")
 
+        // Armamos un único Bundle con todos los datos del perfil
+        val datosPerfil = Bundle().apply {
+            putString(Constantes.EXTRA_NOMBRE, nombre)
+            putString(Constantes.EXTRA_CORREO, correo)
+            putString(Constantes.EXTRA_FECHA_NACIMIENTO, fecha)
+            putString(Constantes.EXTRA_NACIONALIDAD, nacionalidad)
+            putString(Constantes.EXTRA_GENERO, generoSeleccionado)
+            putString(Constantes.EXTRA_CONECTAR, conectarSeleccionado)
+            putString(Constantes.EXTRA_IDIOMAS, idiomas)
+            putString(Constantes.EXTRA_INTERESES, intereses)
+            putString(Constantes.EXTRA_FOTO_URI, fotoUri?.toString())
+        }
+
         val intent = Intent(this, PerfilPreviewActivity::class.java).apply {
-            putExtra(Constantes.EXTRA_NOMBRE, nombre)
-            putExtra(Constantes.EXTRA_CORREO, correo)
-            putExtra(Constantes.EXTRA_FECHA_NACIMIENTO, fecha)
-            putExtra(Constantes.EXTRA_NACIONALIDAD, nacionalidad)
-            putExtra(Constantes.EXTRA_GENERO, generoSeleccionado)
-            putExtra(Constantes.EXTRA_CONECTAR, conectarSeleccionado)
-            putExtra(Constantes.EXTRA_IDIOMAS, idiomas)
-            putExtra(Constantes.EXTRA_INTERESES, intereses)
-            putExtra(Constantes.EXTRA_FOTO_URI, fotoUri?.toString())
+            putExtras(datosPerfil)
         }
         startActivity(intent)
-        //finish()
     }
 
     private fun validarFormulario(): Boolean {

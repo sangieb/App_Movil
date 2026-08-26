@@ -26,6 +26,12 @@
             android:label="@string/app_name"
             android:theme="@style/Theme.Kompa" />
 
+        <activity
+            android:name=".ConfirmacionActivity"
+            android:exported="false"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Kompa" />
+
     </application>
 
 </manifest>
