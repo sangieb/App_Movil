@@ -20,6 +20,12 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".PerfilPreviewActivity"
+            android:exported="false"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Kompa" />
+
     </application>
 
 </manifest>
