@@ -14,4 +14,5 @@ object Constantes {
     const val EXTRA_IDIOMAS = "extra_idiomas"
     const val EXTRA_INTERESES = "extra_intereses"
     const val EXTRA_FOTO_URI = "extra_foto_uri"
+    const val EXTRA_DATOS_PERSONALES = "extra_datos_personales"
 }

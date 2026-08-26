@@ -54,10 +54,6 @@ class PerfilPreviewActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Convierte un texto separado por comas (ej: "Playa, Yoga, Buceo") en
-     * chips de solo lectura dentro del ChipGroup indicado.
-     */
     private fun agregarChipsDeTexto(textoSeparadoPorComas: String, chipGroupId: Int) {
         val chipGroup = findViewById<ChipGroup>(chipGroupId)
         chipGroup.removeAllViews()
@@ -86,7 +82,6 @@ class PerfilPreviewActivity : AppCompatActivity() {
             finish()
         }
 
-        // Punto donde confirmas y guardas el perfil de forma definitiva.
         findViewById<MaterialButton>(R.id.bt_confirmar_perfil).setOnClickListener {
             // TODO: aquí conectas con tu backend/Firebase para guardar el perfil final,
             // antes de mostrar la animación de celebración.
