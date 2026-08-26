@@ -1,5 +1,6 @@
 package com.example.kompa_app
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
@@ -19,22 +20,18 @@ class PerfilPreviewActivity : AppCompatActivity() {
         setupBotones()
     }
 
-    /**
-     * Lee el Bundle de extras que llegó desde MainActivity (el formulario de registro)
-     * y llena la pantalla de previsualización con esa información.
-     */
     private fun mostrarDatosRecibidos() {
-        val datosPerfil: Bundle = intent.extras ?: Bundle()
+        val bundle = intent.getBundleExtra(Constantes.BUNDLE_DATOS) ?: return
 
-        val nombre = datosPerfil.getString(Constantes.EXTRA_NOMBRE, "")
-        val correo = datosPerfil.getString(Constantes.EXTRA_CORREO, "")
-        val fecha = datosPerfil.getString(Constantes.EXTRA_FECHA_NACIMIENTO, "")
-        val nacionalidad = datosPerfil.getString(Constantes.EXTRA_NACIONALIDAD, "")
-        val genero = datosPerfil.getString(Constantes.EXTRA_GENERO, "")
-        val conectar = datosPerfil.getString(Constantes.EXTRA_CONECTAR, "")
-        val idiomas = datosPerfil.getString(Constantes.EXTRA_IDIOMAS, "")
-        val intereses = datosPerfil.getString(Constantes.EXTRA_INTERESES, "")
-        val fotoUriTexto = datosPerfil.getString(Constantes.EXTRA_FOTO_URI)
+        val nombre = bundle.getString(Constantes.EXTRA_NOMBRE).orEmpty()
+        val correo = bundle.getString(Constantes.EXTRA_CORREO).orEmpty()
+        val fecha = bundle.getString(Constantes.EXTRA_FECHA_NACIMIENTO).orEmpty()
+        val nacionalidad = bundle.getString(Constantes.EXTRA_NACIONALIDAD).orEmpty()
+        val genero = bundle.getString(Constantes.EXTRA_GENERO).orEmpty()
+        val conectar = bundle.getString(Constantes.EXTRA_CONECTAR).orEmpty()
+        val idiomas = bundle.getString(Constantes.EXTRA_IDIOMAS).orEmpty()
+        val intereses = bundle.getString(Constantes.EXTRA_INTERESES).orEmpty()
+        val fotoUriTexto = bundle.getString(Constantes.EXTRA_FOTO_URI)
 
         findViewById<TextView>(R.id.tv_nombre_preview).text = nombre
         findViewById<TextView>(R.id.tv_correo_preview).text = correo
@@ -54,10 +51,6 @@ class PerfilPreviewActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Convierte un texto separado por comas (ej: "Playa, Yoga, Buceo") en
-     * chips de solo lectura dentro del ChipGroup indicado.
-     */
     private fun agregarChipsDeTexto(textoSeparadoPorComas: String, chipGroupId: Int) {
         val chipGroup = findViewById<ChipGroup>(chipGroupId)
         chipGroup.removeAllViews()
@@ -79,18 +72,14 @@ class PerfilPreviewActivity : AppCompatActivity() {
     }
 
     private fun setupBotones() {
-        // Regresa al formulario de registro para corregir datos.
-        // MainActivity nunca se cerró, así que al hacer finish() aquí,
-        // Android simplemente vuelve a mostrar esa misma instancia con sus datos intactos.
         findViewById<MaterialButton>(R.id.bt_editar_perfil).setOnClickListener {
             finish()
         }
 
-        // Punto donde confirmas y guardas el perfil de forma definitiva.
         findViewById<MaterialButton>(R.id.bt_confirmar_perfil).setOnClickListener {
             // TODO: aquí conectas con tu backend/Firebase para guardar el perfil final,
             // antes de mostrar la animación de celebración.
-            startActivity(android.content.Intent(this, ConfirmacionActivity::class.java))
+            startActivity(Intent(this, ConfirmacionActivity::class.java))
         }
     }
 }

@@ -6,6 +6,7 @@
     <color name="purple_medium">#9D4EDD</color>
     <color name="purple_light">#E0AAFF</color>
     <color name="purple_ultra_light">#F5EBFF</color>
+    <color name="purple_chip_selected">#7B2CBF</color>
 
     <!-- Blancos / neutros -->
     <color name="white">#FFFFFF</color>

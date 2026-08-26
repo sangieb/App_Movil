@@ -1,10 +1,8 @@
 package com.example.kompa_app
 
-/**
- * Claves usadas para pasar los datos del formulario de registro
- * hacia la pantalla de previsualización de perfil mediante Intent extras.
- */
 object Constantes {
+    const val BUNDLE_DATOS = "bundle_datos_perfil"
+
     const val EXTRA_NOMBRE = "extra_nombre"
     const val EXTRA_CORREO = "extra_correo"
     const val EXTRA_FECHA_NACIMIENTO = "extra_fecha_nacimiento"

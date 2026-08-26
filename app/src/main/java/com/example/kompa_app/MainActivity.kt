@@ -4,13 +4,17 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Patterns
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.CheckBox
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
@@ -20,10 +24,8 @@ import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
-    // Máximo de intereses que el usuario puede elegir
     private val MAX_INTERESES = 5
 
-    // Lista de intereses disponibles (agrega o quita los que necesites)
     private val INTERESES_DISPONIBLES = listOf(
         "Senderismo", "Playa", "Mochilero", "Gastronomía", "Fotografía",
         "Vida nocturna", "Museos y cultura", "Deportes extremos", "Yoga",
@@ -43,7 +45,6 @@ class MainActivity : AppCompatActivity() {
     private var fotoUri: Uri? = null
     private val interesesSeleccionados = mutableSetOf<String>()
 
-    // Selector de imagen desde galería
     private val pickImageLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -64,6 +65,7 @@ class MainActivity : AppCompatActivity() {
         setupFechaNacimiento()
         setupNacionalidad()
         setupIdiomas()
+        setupConectarChips()
         setupIntereses()
         setupBotonRegistrar()
     }
@@ -104,11 +106,27 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupIdiomas() {
-        // Para selección múltiple real de idiomas, considera reemplazar este
-        // AutoCompleteTextView por un ChipGroup similar al de intereses.
         val actvIdiomas = findViewById<AutoCompleteTextView>(R.id.actv_idiomas)
         val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, IDIOMAS)
         actvIdiomas.setAdapter(adapter)
+    }
+
+    private fun setupConectarChips() {
+        val cgConectar = findViewById<ChipGroup>(R.id.cg_conectar)
+        val ids = listOf(R.id.chip_mujeres, R.id.chip_hombres, R.id.chip_todes)
+
+        ids.forEach { chipId ->
+            val chip = cgConectar.findViewById<Chip>(chipId)
+            chip.setOnCheckedChangeListener { buttonView, isChecked ->
+                if (isChecked) {
+                    buttonView.setBackgroundColor(ContextCompat.getColor(this, R.color.purple_chip_selected))
+                    buttonView.setTextColor(ContextCompat.getColor(this, R.color.white))
+                } else {
+                    buttonView.setBackgroundColor(ContextCompat.getColor(this, R.color.purple_ultra_light))
+                    buttonView.setTextColor(ContextCompat.getColor(this, R.color.text_dark))
+                }
+            }
+        }
     }
 
     private fun setupIntereses() {
@@ -125,9 +143,10 @@ class MainActivity : AppCompatActivity() {
             }
 
             chipInteres.setOnCheckedChangeListener { buttonView, isChecked ->
+                val chip = buttonView as Chip
                 if (isChecked) {
                     if (interesesSeleccionados.size >= MAX_INTERESES) {
-                        buttonView.isChecked = false
+                        chip.isChecked = false
                         Toast.makeText(
                             this,
                             "Solo puedes elegir hasta $MAX_INTERESES intereses",
@@ -136,8 +155,12 @@ class MainActivity : AppCompatActivity() {
                         return@setOnCheckedChangeListener
                     }
                     interesesSeleccionados.add(interes)
+                    chip.setChipBackgroundColorResource(R.color.purple_chip_selected)
+                    chip.setTextColor(ContextCompat.getColor(this, R.color.white))
                 } else {
                     interesesSeleccionados.remove(interes)
+                    chip.setChipBackgroundColorResource(R.color.purple_ultra_light)
+                    chip.setTextColor(ContextCompat.getColor(this, R.color.text_dark))
                 }
                 tvContadorIntereses.text = "Elige hasta $MAX_INTERESES (${interesesSeleccionados.size}/$MAX_INTERESES)"
             }
@@ -147,7 +170,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupBotonRegistrar() {
-        findViewById<com.google.android.material.button.MaterialButton>(R.id.bt_registrar)
+        findViewById<MaterialButton>(R.id.bt_registrar)
             .setOnClickListener {
                 if (validarFormulario()) {
                     irAPerfilPreview()
@@ -155,13 +178,12 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
-
     private fun irAPerfilPreview() {
-        val nombre = findViewById<TextInputEditText>(R.id.et_nombre).text.toString()
-        val correo = findViewById<TextInputEditText>(R.id.et_correo).text.toString()
-        val fecha = findViewById<TextInputEditText>(R.id.et_fecha_nacimiento).text.toString()
-        val nacionalidad = findViewById<AutoCompleteTextView>(R.id.actv_nacionalidad).text.toString()
-        val idiomas = findViewById<AutoCompleteTextView>(R.id.actv_idiomas).text.toString()
+        val nombre = findViewById<TextInputEditText>(R.id.et_nombre).text.toString().trim()
+        val correo = findViewById<TextInputEditText>(R.id.et_correo).text.toString().trim()
+        val fecha = findViewById<TextInputEditText>(R.id.et_fecha_nacimiento).text.toString().trim()
+        val nacionalidad = findViewById<AutoCompleteTextView>(R.id.actv_nacionalidad).text.toString().trim()
+        val idiomas = findViewById<AutoCompleteTextView>(R.id.actv_idiomas).text.toString().trim()
 
         val rgGenero = findViewById<RadioGroup>(R.id.rg_genero)
         val generoSeleccionado = findViewById<RadioButton>(rgGenero.checkedRadioButtonId).text.toString()
@@ -173,8 +195,7 @@ class MainActivity : AppCompatActivity() {
 
         val intereses = interesesSeleccionados.joinToString(", ")
 
-        // Armamos un único Bundle con todos los datos del perfil
-        val datosPerfil = Bundle().apply {
+        val bundle = Bundle().apply {
             putString(Constantes.EXTRA_NOMBRE, nombre)
             putString(Constantes.EXTRA_CORREO, correo)
             putString(Constantes.EXTRA_FECHA_NACIMIENTO, fecha)
@@ -187,29 +208,54 @@ class MainActivity : AppCompatActivity() {
         }
 
         val intent = Intent(this, PerfilPreviewActivity::class.java).apply {
-            putExtras(datosPerfil)
+            putExtra(Constantes.BUNDLE_DATOS, bundle)
         }
         startActivity(intent)
     }
 
     private fun validarFormulario(): Boolean {
-        val nombre = findViewById<TextInputEditText>(R.id.et_nombre).text.toString()
-        val correo = findViewById<TextInputEditText>(R.id.et_correo).text.toString()
+        val nombre = findViewById<TextInputEditText>(R.id.et_nombre).text.toString().trim()
+        val correo = findViewById<TextInputEditText>(R.id.et_correo).text.toString().trim()
         val password = findViewById<TextInputEditText>(R.id.et_password).text.toString()
-        val fecha = findViewById<TextInputEditText>(R.id.et_fecha_nacimiento).text.toString()
+        val fecha = findViewById<TextInputEditText>(R.id.et_fecha_nacimiento).text.toString().trim()
+        val nacionalidad = findViewById<AutoCompleteTextView>(R.id.actv_nacionalidad).text.toString().trim()
+        val idiomas = findViewById<AutoCompleteTextView>(R.id.actv_idiomas).text.toString().trim()
         val genero = findViewById<RadioGroup>(R.id.rg_genero).checkedRadioButtonId
         val conectarChips = findViewById<ChipGroup>(R.id.cg_conectar).checkedChipIds
+        val cbDatosPersonales = findViewById<CheckBox>(R.id.cb_datos_personales)
 
         return when {
             nombre.isBlank() -> mostrarError("Ingresa tu nombre")
+            nombre.length < 2 -> mostrarError("El nombre debe tener al menos 2 caracteres")
             correo.isBlank() -> mostrarError("Ingresa tu correo")
+            !Patterns.EMAIL_ADDRESS.matcher(correo).matches() -> mostrarError("Ingresa un correo electrónico válido")
             password.length < 6 -> mostrarError("La contraseña debe tener al menos 6 caracteres")
             fecha.isBlank() -> mostrarError("Selecciona tu fecha de nacimiento")
+            !esMayorDeEdad(fecha) -> mostrarError("Debes ser mayor de edad para registrarte")
+            nacionalidad.isBlank() -> mostrarError("Selecciona tu nacionalidad")
+            idiomas.isBlank() -> mostrarError("Selecciona al menos un idioma")
             genero == -1 -> mostrarError("Selecciona tu género")
             conectarChips.isEmpty() -> mostrarError("Selecciona con quién quieres conectar")
             interesesSeleccionados.isEmpty() -> mostrarError("Elige al menos un interés")
-            //fotoUri == null -> mostrarError("Sube una foto de perfil")
+            !cbDatosPersonales.isChecked -> mostrarError("Debes aceptar el tratamiento de datos")
             else -> true
+        }
+    }
+
+    private fun esMayorDeEdad(fecha: String): Boolean {
+        return try {
+            val formato = SimpleDateFormat("dd/MM/yyyy", Locale("es"))
+            val fechaNacimiento = formato.parse(fecha) ?: return false
+            val calendarioNacimiento = Calendar.getInstance().apply { time = fechaNacimiento }
+            val hoy = Calendar.getInstance()
+
+            var edad = hoy.get(Calendar.YEAR) - calendarioNacimiento.get(Calendar.YEAR)
+            if (hoy.get(Calendar.DAY_OF_YEAR) < calendarioNacimiento.get(Calendar.DAY_OF_YEAR)) {
+                edad--
+            }
+            edad >= 18
+        } catch (e: Exception) {
+            false
         }
     }
 
