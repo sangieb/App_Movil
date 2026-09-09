@@ -208,7 +208,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         val intent = Intent(this, PerfilPreviewActivity::class.java).apply {
-            putExtras(bundle)
+            putExtra(Constantes.BUNDLE_DATOS, bundle)
         }
         startActivity(intent)
     }

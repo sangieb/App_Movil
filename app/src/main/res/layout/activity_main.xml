@@ -195,7 +195,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Puedes seleccionar varios idiomas"
             android:textColor="@color/gray_text"
             android:textSize="12sp" />
 
@@ -323,7 +322,7 @@
             app:singleSelection="false">
 
             <!-- Los chips de interés se agregan dinámicamente desde Kotlin,
-                 ver INTERESES_DISPONIBLES en RegisterActivity.kt -->
+                 ver INTERESES_DISPONIBLES en MainActivity.kt -->
 
         </com.google.android.material.chip.ChipGroup>
 
