@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/purple_primary"
+    tools:context=".InicioActivity"
+    tools:ignore="Overdraw">
+
+    <ImageView
+        android:id="@+id/img_logo"
+        android:layout_width="404dp"
+        android:layout_height="245dp"
+        android:contentDescription="@string/inicio_content_desc_logo"
+        android:scaleType="fitCenter"
+        android:src="@drawable/kompalog_removebg01"
+        app:layout_constraintBottom_toTopOf="@id/ll_botones"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <LinearLayout
+        android:id="@+id/ll_botones"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="56dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_registrarse"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:backgroundTint="@color/white"
+            android:text="@string/inicio_bt_registrarse"
+            android:textAllCaps="false"
+            android:textColor="@color/purple_primary"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:cornerRadius="28dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_iniciar_sesion"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/inicio_bt_iniciar_sesion"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:cornerRadius="28dp"
+            app:strokeColor="@color/white"
+            app:strokeWidth="1dp" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
