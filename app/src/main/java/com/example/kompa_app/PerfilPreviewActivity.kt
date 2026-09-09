@@ -54,7 +54,7 @@ class PerfilPreviewActivity : AppCompatActivity() {
         agregarChipsDeTexto(intereses, R.id.cg_intereses_preview)
 
         fotoUriTexto?.let { uriTexto ->
-            findViewById<ImageView>(R.id.iv_foto_perfil_preview).apply {
+            findViewById<ImageView>(R.id.img_foto_perfil_preview).apply {
                 setImageURI(Uri.parse(uriTexto))
                 setPadding(0, 0, 0, 0)
             }
@@ -82,14 +82,21 @@ class PerfilPreviewActivity : AppCompatActivity() {
     }
 
     private fun setupBotones() {
-        findViewById<MaterialButton>(R.id.bt_editar_perfil).setOnClickListener {
+        findViewById<MaterialButton>(R.id.btn_editar_perfil).setOnClickListener {
             finish()
         }
 
-        findViewById<MaterialButton>(R.id.bt_confirmar_perfil).setOnClickListener {
-            // TODO: aquí conectas con tu backend/Firebase para guardar el perfil final,
-            // antes de mostrar la animación de celebración.
-            startActivity(Intent(this, ConfirmacionActivity::class.java))
+        findViewById<MaterialButton>(R.id.btn_confirmar_perfil).setOnClickListener {
+            val datos = intent.getBundleExtra(Constantes.BUNDLE_DATOS) ?: Bundle()
+            startActivity(
+                Intent(this, ConfirmacionActivity::class.java)
+                    .putExtra(Constantes.BUNDLE_DATOS, datos)
+            )
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressedDispatcher.onBackPressed()
+        return true
     }
 }

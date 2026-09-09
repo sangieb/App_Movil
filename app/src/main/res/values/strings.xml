@@ -86,4 +86,46 @@
     <string name="confirmacion_subtitulo">Es hora de encontrar a tu próximo Kompa de viaje</string>
     <string name="confirmacion_boton">Empezar a explorar</string>
     <string name="welcome_toast">¡Bienvenido a Kompa!</string>
+
+    <!-- Activity home -->
+    <string name="home_titulo">Kompa</string>
+    <string name="home_bt_show_list">Show list</string>
+    <string name="home_cd_agregar">Agregar actividad</string>
+    <string name="home_cd_centrar">Centrar mapa</string>
+    <string name="home_permiso_negado">Usaremos la ubicación por defecto</string>
+
+    <!-- Activity nueva actividad -->
+    <string name="nueva_titulo">Nueva actividad</string>
+    <string name="nueva_hint_nombre">Nombre de la actividad</string>
+    <string name="nueva_foto_titulo">Foto del grupo</string>
+    <string name="nueva_bt_agregar_foto">Agregar foto</string>
+    <string name="nueva_content_desc_foto">Foto del grupo</string>
+    <string name="nueva_hint_ubicacion">Ubicación</string>
+    <string name="nueva_ayuda_ubicacion">Escribe una dirección o toca el mapa para fijar la ubicación</string>
+    <string name="nueva_error_direccion">No se encontró la dirección</string>
+    <string name="nueva_error_direccion_vacia">Escribe una dirección para buscarla</string>
+    <string name="nueva_hint_descripcion">Descripción</string>
+    <string name="nueva_hint_duracion">Duración (min)</string>
+    <string name="nueva_hint_fecha">Fecha y hora de la actividad</string>
+    <string name="nueva_bt_guardar">Guardar actividad</string>
+    <string name="nueva_error_nombre">Escribe el nombre de la actividad</string>
+    <string name="nueva_error_nombre_corto">El nombre debe tener al menos 2 caracteres</string>
+    <string name="nueva_error_ubicacion">Toca el mapa para fijar la ubicación de la actividad</string>
+    <string name="nueva_error_descripcion">Escribe una descripción de al menos 10 caracteres</string>
+    <string name="nueva_error_duracion">Escribe una duración válida en minutos</string>
+    <string name="nueva_error_fecha">Selecciona la fecha y hora de la actividad</string>
+    <string name="nueva_error_fecha_pasada">La fecha de la actividad debe ser futura</string>
+    <string name="nueva_ubicacion_sin_nombre">Ubicación seleccionada (sin nombre)</string>
+    <string name="nueva_creador_tu">Tú</string>
+    <string name="nueva_guardada">Actividad guardada</string>
+
+    <!-- Activity lista de actividades -->
+    <string name="lista_titulo">Actividades cerca</string>
+    <string name="lista_vacia">Todavía no hay actividades cerca</string>
+    <string name="item_sin_dato">—</string>
+    <string name="item_creado_por">Creada por: %1$s</string>
+    <string name="item_duracion_minutos">%1$d min</string>
+    <string name="item_duracion_horas">%1$d h</string>
+    <string name="item_duracion_horas_minutos">%1$d h %2$d min</string>
+    <string name="item_content_desc_foto">Foto de la actividad</string>
 </resources>

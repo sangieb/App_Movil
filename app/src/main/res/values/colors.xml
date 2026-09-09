@@ -11,4 +11,8 @@
     <color name="white">#FFFFFF</color>
     <color name="gray_text">#6B6B6B</color>
     <color name="text_dark">#2B2B2B</color>
+
+    <!-- Marcadores del mapa -->
+    <color name="marker_local">#7B2CBF</color>
+    <color name="marker_api">#2F80ED</color>
 </resources>

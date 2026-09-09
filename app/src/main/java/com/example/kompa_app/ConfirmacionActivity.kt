@@ -1,9 +1,13 @@
 package com.example.kompa_app
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.kompa_app.data.PerfilStore
+import com.example.kompa_app.ui.home.HomeActivity
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 
 class ConfirmacionActivity : AppCompatActivity() {
@@ -12,8 +16,15 @@ class ConfirmacionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_confirmacion)
 
+        persistirPerfil()
+
+        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar_confirmacion)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+
         val airplaneView = findViewById<AirplaneAnimationView>(R.id.airplaneAnimationView)
-        val btnContinuar = findViewById<MaterialButton>(R.id.bt_continuar)
+        val btnContinuar = findViewById<MaterialButton>(R.id.btn_continuar)
 
         // Cuando la animación del avión (el "brindis") termina su vuelta,
         // mostramos el botón para continuar.
@@ -26,10 +37,23 @@ class ConfirmacionActivity : AppCompatActivity() {
         }
 
         btnContinuar.setOnClickListener {
-            // TODO: cuando exista una pantalla principal/home de la app,
-            // navega hacia allá con startActivity(...) antes del finishAffinity().
             Toast.makeText(this, getString(R.string.welcome_toast), Toast.LENGTH_SHORT).show()
-            finishAffinity() // Cierra todo el flujo de registro; no se puede volver atrás
+            startActivity(
+                Intent(this, HomeActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            )
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressedDispatcher.onBackPressed()
+        return true
+    }
+
+    private fun persistirPerfil() {
+        intent.getBundleExtra(Constantes.BUNDLE_DATOS)
+            ?.getString(Constantes.EXTRA_NACIONALIDAD)
+            ?.takeIf { it.isNotBlank() }
+            ?.let { PerfilStore(this).guardarNacionalidad(it) }
     }
 }

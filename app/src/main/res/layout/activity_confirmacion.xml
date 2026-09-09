@@ -5,11 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar_confirmacion"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <TextView
         android:id="@+id/tv_confirmacion_titulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="24dp"
         android:paddingHorizontal="24dp"
         android:gravity="center"
         android:text="@string/confirmacion_titulo"
@@ -17,7 +26,7 @@
         android:textSize="26sp"
         android:textStyle="bold"
         android:fontFamily="sans-serif-medium"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_confirmacion"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -38,17 +47,16 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="24dp"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintTop_toBottomOf="@id/tv_confirmacion_subtitulo"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/bt_continuar"
+        android:id="@+id/btn_continuar"
         android:layout_width="wrap_content"
         android:layout_height="56dp"
-        android:layout_marginBottom="48dp"
+        android:layout_marginTop="24dp"
         android:paddingHorizontal="32dp"
         android:text="@string/confirmacion_boton"
         android:textAllCaps="false"
@@ -59,8 +67,10 @@
         android:alpha="0"
         android:visibility="invisible"
         app:cornerRadius="28dp"
-        app:layout_constraintBottom_toBottomOf="@id/airplaneAnimationView"
-        app:layout_constraintStart_toStartOf="@id/airplaneAnimationView"
-        app:layout_constraintEnd_toEndOf="@id/airplaneAnimationView" />
+        app:layout_constraintTop_toBottomOf="@id/airplaneAnimationView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -46,7 +46,7 @@
 
             <!-- Foto de perfil -->
             <ImageView
-                android:id="@+id/iv_foto_perfil_preview"
+                android:id="@+id/img_foto_perfil_preview"
                 android:layout_width="140dp"
                 android:layout_height="140dp"
                 android:layout_gravity="center_horizontal"
@@ -159,7 +159,7 @@
 
             <!-- Botones -->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/bt_confirmar_perfil"
+                android:id="@+id/btn_confirmar_perfil"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="32dp"
@@ -172,7 +172,7 @@
                 app:cornerRadius="28dp" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/bt_editar_perfil"
+                android:id="@+id/btn_editar_perfil"
                 style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
