@@ -35,10 +35,14 @@ class PerfilPreviewActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.tv_nombre_preview).text = nombre
         findViewById<TextView>(R.id.tv_correo_preview).text = correo
-        findViewById<TextView>(R.id.tv_fecha_nacimiento_preview).text = "Nacimiento: $fecha"
-        findViewById<TextView>(R.id.tv_nacionalidad_preview).text = "Nacionalidad: $nacionalidad"
-        findViewById<TextView>(R.id.tv_genero_preview).text = "Género: $genero"
-        findViewById<TextView>(R.id.tv_conectar_preview).text = "Conectar con: $conectar"
+        findViewById<TextView>(R.id.tv_fecha_nacimiento_preview).text =
+            getString(R.string.preview_nacimiento_formato, fecha)
+        findViewById<TextView>(R.id.tv_nacionalidad_preview).text =
+            getString(R.string.preview_nacionalidad_formato, nacionalidad)
+        findViewById<TextView>(R.id.tv_genero_preview).text =
+            getString(R.string.preview_genero_formato, genero)
+        findViewById<TextView>(R.id.tv_conectar_preview).text =
+            getString(R.string.preview_conectar_formato, conectar)
 
         agregarChipsDeTexto(idiomas, R.id.cg_idiomas_preview)
         agregarChipsDeTexto(intereses, R.id.cg_intereses_preview)

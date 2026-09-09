@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
                 { _, year, month, day ->
                     val fechaSeleccionada = Calendar.getInstance()
                     fechaSeleccionada.set(year, month, day)
-                    val formato = SimpleDateFormat("dd/MM/yyyy", Locale("es"))
+val formato = SimpleDateFormat("dd/MM/yyyy", Locale.forLanguageTag("es"))
                     etFechaNacimiento.setText(formato.format(fechaSeleccionada.time))
                 },
                 calendario.get(Calendar.YEAR),
@@ -119,7 +119,7 @@ class MainActivity : AppCompatActivity() {
             val chip = cgConectar.findViewById<Chip>(chipId)
             chip.setOnCheckedChangeListener { buttonView, isChecked ->
                 if (isChecked) {
-                    buttonView.setBackgroundColor(ContextCompat.getColor(this, R.color.purple_chip_selected))
+                    buttonView.setBackgroundColor(ContextCompat.getColor(this, R.color.purple_primary))
                     buttonView.setTextColor(ContextCompat.getColor(this, R.color.white))
                 } else {
                     buttonView.setBackgroundColor(ContextCompat.getColor(this, R.color.purple_ultra_light))
@@ -149,20 +149,25 @@ class MainActivity : AppCompatActivity() {
                         chip.isChecked = false
                         Toast.makeText(
                             this,
-                            "Solo puedes elegir hasta $MAX_INTERESES intereses",
+                            resources.getQuantityString(R.plurals.error_max_intereses, MAX_INTERESES, MAX_INTERESES),
                             Toast.LENGTH_SHORT
                         ).show()
                         return@setOnCheckedChangeListener
                     }
                     interesesSeleccionados.add(interes)
-                    chip.setChipBackgroundColorResource(R.color.purple_chip_selected)
+                    chip.setChipBackgroundColorResource(R.color.purple_primary)
                     chip.setTextColor(ContextCompat.getColor(this, R.color.white))
                 } else {
                     interesesSeleccionados.remove(interes)
                     chip.setChipBackgroundColorResource(R.color.purple_ultra_light)
                     chip.setTextColor(ContextCompat.getColor(this, R.color.text_dark))
                 }
-                tvContadorIntereses.text = "Elige hasta $MAX_INTERESES (${interesesSeleccionados.size}/$MAX_INTERESES)"
+                tvContadorIntereses.text = getString(
+                    R.string.main_contador_intereses_formato,
+                    MAX_INTERESES,
+                    interesesSeleccionados.size,
+                    MAX_INTERESES
+                )
             }
 
             cgIntereses.addView(chipInteres)
@@ -186,7 +191,8 @@ class MainActivity : AppCompatActivity() {
         val idiomas = findViewById<AutoCompleteTextView>(R.id.actv_idiomas).text.toString().trim()
 
         val rgGenero = findViewById<RadioGroup>(R.id.rg_genero)
-        val generoSeleccionado = findViewById<RadioButton>(rgGenero.checkedRadioButtonId).text.toString()
+        val generoSeleccionado = if (rgGenero.checkedRadioButtonId == -1) "" else
+            findViewById<RadioButton>(rgGenero.checkedRadioButtonId).text.toString()
 
         val cgConectar = findViewById<ChipGroup>(R.id.cg_conectar)
         val conectarSeleccionado = cgConectar.checkedChipIds.joinToString(", ") { id ->
@@ -225,32 +231,35 @@ class MainActivity : AppCompatActivity() {
         val cbDatosPersonales = findViewById<CheckBox>(R.id.cb_datos_personales)
 
         return when {
-            nombre.isBlank() -> mostrarError("Ingresa tu nombre")
-            nombre.length < 2 -> mostrarError("El nombre debe tener al menos 2 caracteres")
-            correo.isBlank() -> mostrarError("Ingresa tu correo")
-            !Patterns.EMAIL_ADDRESS.matcher(correo).matches() -> mostrarError("Ingresa un correo electrónico válido")
-            password.length < 6 -> mostrarError("La contraseña debe tener al menos 6 caracteres")
-            fecha.isBlank() -> mostrarError("Selecciona tu fecha de nacimiento")
-            !esMayorDeEdad(fecha) -> mostrarError("Debes ser mayor de edad para registrarte")
-            nacionalidad.isBlank() -> mostrarError("Selecciona tu nacionalidad")
-            idiomas.isBlank() -> mostrarError("Selecciona al menos un idioma")
-            genero == -1 -> mostrarError("Selecciona tu género")
-            conectarChips.isEmpty() -> mostrarError("Selecciona con quién quieres conectar")
-            interesesSeleccionados.isEmpty() -> mostrarError("Elige al menos un interés")
-            !cbDatosPersonales.isChecked -> mostrarError("Debes aceptar el tratamiento de datos")
+            nombre.isBlank() -> mostrarError(getString(R.string.error_nombre))
+            nombre.length < 2 -> mostrarError(getString(R.string.error_nombre_corto))
+            correo.isBlank() -> mostrarError(getString(R.string.error_correo))
+            !Patterns.EMAIL_ADDRESS.matcher(correo).matches() -> mostrarError(getString(R.string.error_correo_invalido))
+            password.length < 6 -> mostrarError(getString(R.string.error_password))
+            fecha.isBlank() -> mostrarError(getString(R.string.error_fecha))
+            !esMayorDeEdad(fecha) -> mostrarError(getString(R.string.error_mayor_edad))
+            nacionalidad.isBlank() -> mostrarError(getString(R.string.error_nacionalidad))
+            idiomas.isBlank() -> mostrarError(getString(R.string.error_idioma))
+            genero == -1 -> mostrarError(getString(R.string.error_genero))
+            conectarChips.isEmpty() -> mostrarError(getString(R.string.error_conectar))
+            interesesSeleccionados.isEmpty() -> mostrarError(getString(R.string.error_intereses))
+            !cbDatosPersonales.isChecked -> mostrarError(getString(R.string.error_datos_personales))
             else -> true
         }
     }
 
     private fun esMayorDeEdad(fecha: String): Boolean {
         return try {
-            val formato = SimpleDateFormat("dd/MM/yyyy", Locale("es"))
+            val formato = SimpleDateFormat("dd/MM/yyyy", Locale.forLanguageTag("es"))
             val fechaNacimiento = formato.parse(fecha) ?: return false
             val calendarioNacimiento = Calendar.getInstance().apply { time = fechaNacimiento }
             val hoy = Calendar.getInstance()
 
             var edad = hoy.get(Calendar.YEAR) - calendarioNacimiento.get(Calendar.YEAR)
-            if (hoy.get(Calendar.DAY_OF_YEAR) < calendarioNacimiento.get(Calendar.DAY_OF_YEAR)) {
+            if (hoy.get(Calendar.MONTH) < calendarioNacimiento.get(Calendar.MONTH) ||
+                (hoy.get(Calendar.MONTH) == calendarioNacimiento.get(Calendar.MONTH) &&
+                    hoy.get(Calendar.DAY_OF_MONTH) < calendarioNacimiento.get(Calendar.DAY_OF_MONTH))
+            ) {
                 edad--
             }
             edad >= 18

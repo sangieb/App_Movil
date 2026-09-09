@@ -1,3 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Kompa</string>
+
+    <!-- Activity main (registro) -->
+    <string name="main_titulo">Crea tu cuenta</string>
+    <string name="main_subtitulo">Encuentra a tu próximo grupo de viaje o amistad</string>
+    <string name="main_content_desc_foto">Foto de perfil</string>
+    <string name="main_content_desc_agregar_foto">Agregar foto</string>
+    <string name="main_ayuda_foto">Toca para subir tu foto</string>
+    <string name="main_hint_nombre">Nombre completo</string>
+    <string name="main_hint_correo">Correo electrónico</string>
+    <string name="main_hint_password">Contraseña</string>
+    <string name="main_hint_fecha_nacimiento">Fecha de nacimiento</string>
+    <string name="main_hint_nacionalidad">Nacionalidad</string>
+    <string name="main_hint_idiomas">Idioma que hablas</string>
+    <string name="main_label_genero">Género</string>
+    <string name="main_genero_mujer">Mujer</string>
+    <string name="main_genero_hombre">Hombre</string>
+    <string name="main_genero_no_binario">No binario</string>
+    <string name="main_genero_otro">Prefiero describirlo</string>
+    <string name="main_label_conectar">¿Con quién quieres conectar?</string>
+    <string name="main_conectar_mujeres">Mujeres</string>
+    <string name="main_conectar_hombres">Hombres</string>
+    <string name="main_conectar_todes">Todes</string>
+    <string name="main_label_intereses">Tus intereses</string>
+    <string name="main_contador_intereses_formato">Elige hasta %1$d (%2$d/%3$d)</string>
+    <string name="main_boton_crear_cuenta">Crear cuenta</string>
+    <string name="main_acepto_datos">Acepto el tratamiento de mis datos personales conforme a la Política de Privacidad</string>
+    <string name="main_terminos">Al registrarte aceptas nuestros Términos y Condiciones y Política de Privacidad</string>
+
+    <!-- Toasts de validación -->
+    <string name="error_nombre">Ingresa tu nombre</string>
+    <string name="error_nombre_corto">El nombre debe tener al menos 2 caracteres</string>
+    <string name="error_correo">Ingresa tu correo</string>
+    <string name="error_correo_invalido">Ingresa un correo electrónico válido</string>
+    <string name="error_password">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="error_fecha">Selecciona tu fecha de nacimiento</string>
+    <string name="error_mayor_edad">Debes ser mayor de edad para registrarte</string>
+    <string name="error_nacionalidad">Selecciona tu nacionalidad</string>
+    <string name="error_idioma">Selecciona al menos un idioma</string>
+    <string name="error_genero">Selecciona tu género</string>
+    <string name="error_conectar">Selecciona con quién quieres conectar</string>
+    <string name="error_intereses">Elige al menos un interés</string>
+    <string name="error_datos_personales">Debes aceptar el tratamiento de datos</string>
+    <plurals name="error_max_intereses">
+        <item quantity="one">Solo puedes elegir hasta %1$d interés</item>
+        <item quantity="other">Solo puedes elegir hasta %1$d intereses</item>
+    </plurals>
+
+    <!-- Activity perfil preview -->
+    <string name="preview_titulo">Así se verá tu perfil</string>
+    <string name="preview_subtitulo">Revisa que todo esté correcto antes de confirmar</string>
+    <string name="preview_content_desc_foto">Foto de perfil</string>
+    <string name="preview_ejemplo_nombre">María Torres</string>
+    <string name="preview_ejemplo_correo">maria@correo.com</string>
+    <string name="preview_nacimiento_formato">Nacimiento: %1$s</string>
+    <string name="preview_nacionalidad_formato">Nacionalidad: %1$s</string>
+    <string name="preview_genero_formato">Género: %1$s</string>
+    <string name="preview_conectar_formato">Conectar con: %1$s</string>
+    <string name="preview_label_idiomas">Idiomas</string>
+    <string name="preview_label_intereses">Intereses</string>
+    <string name="preview_confirmar">Confirmar perfil</string>
+    <string name="preview_editar">Editar información</string>
+
+    <!-- Activity confirmación -->
+    <string name="confirmacion_titulo">¡Tu perfil está listo!</string>
+    <string name="confirmacion_subtitulo">Es hora de encontrar a tu próximo Kompa de viaje</string>
+    <string name="confirmacion_boton">Empezar a explorar</string>
+    <string name="welcome_toast">¡Bienvenido a Kompa!</string>
 </resources>

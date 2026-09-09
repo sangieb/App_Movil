@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:fillViewport="true"
     tools:context=".PerfilPreviewActivity">
 
@@ -20,7 +19,7 @@
             android:id="@+id/tv_titulo_preview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Así se verá tu perfil"
+            android:text="@string/preview_titulo"
             android:textColor="@color/purple_dark"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -30,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Revisa que todo esté correcto antes de confirmar"
+            android:text="@string/preview_subtitulo"
             android:textColor="@color/gray_text"
             android:textSize="14sp" />
 
@@ -46,7 +45,7 @@
             android:scaleType="centerCrop"
             android:src="@android:drawable/ic_menu_camera"
             app:tint="@color/purple_medium"
-            android:contentDescription="Foto de perfil" />
+            android:contentDescription="@string/preview_content_desc_foto" />
 
         <!-- Nombre -->
         <TextView
@@ -58,7 +57,7 @@
             android:textColor="@color/text_dark"
             android:textSize="22sp"
             android:textStyle="bold"
-            tools:text="María Torres" />
+            tools:text="@string/preview_ejemplo_nombre" />
 
         <!-- Correo -->
         <TextView
@@ -68,7 +67,7 @@
             android:gravity="center_horizontal"
             android:textColor="@color/gray_text"
             android:textSize="13sp"
-            tools:text="maria@correo.com" />
+            tools:text="@string/preview_ejemplo_correo" />
 
         <!-- Tarjeta de datos -->
         <LinearLayout
@@ -85,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_dark"
                 android:textSize="14sp"
-                tools:text="Nacimiento: 12/05/2000" />
+                tools:text="@string/preview_nacimiento_formato" />
 
             <TextView
                 android:id="@+id/tv_nacionalidad_preview"
@@ -94,7 +93,7 @@
                 android:layout_marginTop="8dp"
                 android:textColor="@color/text_dark"
                 android:textSize="14sp"
-                tools:text="Nacionalidad: Colombiana" />
+                tools:text="@string/preview_nacionalidad_formato" />
 
             <TextView
                 android:id="@+id/tv_genero_preview"
@@ -103,7 +102,7 @@
                 android:layout_marginTop="8dp"
                 android:textColor="@color/text_dark"
                 android:textSize="14sp"
-                tools:text="Género: Mujer" />
+                tools:text="@string/preview_genero_formato" />
 
             <TextView
                 android:id="@+id/tv_conectar_preview"
@@ -112,7 +111,7 @@
                 android:layout_marginTop="8dp"
                 android:textColor="@color/text_dark"
                 android:textSize="14sp"
-                tools:text="Conectar con: Mujeres, Todes" />
+                tools:text="@string/preview_conectar_formato" />
         </LinearLayout>
 
         <!-- Idiomas -->
@@ -120,7 +119,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Idiomas"
+            android:text="@string/preview_label_idiomas"
             android:textColor="@color/text_dark"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -136,7 +135,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Intereses"
+            android:text="@string/preview_label_intereses"
             android:textColor="@color/text_dark"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -154,7 +153,7 @@
             android:layout_height="56dp"
             android:layout_marginTop="32dp"
             android:backgroundTint="@color/purple_primary"
-            android:text="Confirmar perfil"
+            android:text="@string/preview_confirmar"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="16sp"
@@ -167,7 +166,7 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="8dp"
-            android:text="Editar información"
+            android:text="@string/preview_editar"
             android:textAllCaps="false"
             android:textColor="@color/purple_primary"
             android:textSize="15sp" />

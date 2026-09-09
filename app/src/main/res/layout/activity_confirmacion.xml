@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/tv_confirmacion_titulo"
@@ -13,7 +12,7 @@
         android:layout_marginTop="48dp"
         android:paddingHorizontal="24dp"
         android:gravity="center"
-        android:text="¡Tu perfil está listo!"
+        android:text="@string/confirmacion_titulo"
         android:textColor="@color/purple_dark"
         android:textSize="26sp"
         android:textStyle="bold"
@@ -27,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Es hora de encontrar a tu próximo Kompa de viaje"
+        android:text="@string/confirmacion_subtitulo"
         android:textColor="@color/gray_text"
         android:textSize="14sp"
         app:layout_constraintTop_toBottomOf="@id/tv_confirmacion_titulo"
@@ -51,7 +50,7 @@
         android:layout_height="56dp"
         android:layout_marginBottom="48dp"
         android:paddingHorizontal="32dp"
-        android:text="Empezar a explorar"
+        android:text="@string/confirmacion_boton"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="16sp"

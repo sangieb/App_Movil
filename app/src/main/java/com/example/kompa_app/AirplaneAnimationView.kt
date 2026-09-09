@@ -15,8 +15,9 @@ import android.view.animation.LinearInterpolator
 
 class AirplaneAnimationView @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null
-) : View(context, attrs) {
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : View(context, attrs, defStyleAttr) {
 
     private var viewWidth: Float = 0f
     private var viewHeight: Float = 0f
@@ -27,15 +28,8 @@ class AirplaneAnimationView @JvmOverloads constructor(
     companion object {
         private const val FLIGHT_DURATION_MS = 4000L
         private const val PAUSE_DURATION_MS = 300L
-        private const val TRANSFORM_DURATION_MS = 1000L
-        private const val TOAST_DURATION_MS = 800L
+        private const val BACKGROUND_COLOR = "#F2F2F2"
     }
-
-    private enum class AnimationPhase {
-        FLIGHT, PAUSE, TRANSFORM, TOAST, FINISHED
-    }
-
-    private var currentPhase: AnimationPhase = AnimationPhase.FLIGHT
 
     var onFlightCompleted: (() -> Unit)? = null
 
@@ -79,8 +73,6 @@ class AirplaneAnimationView @JvmOverloads constructor(
     }
 
     private fun startFlightAnimation() {
-        currentPhase = AnimationPhase.FLIGHT
-
         val startAngle = -Math.PI.toFloat() / 2f
         val endAngle = startAngle + (2f * Math.PI.toFloat())
 
@@ -106,8 +98,6 @@ class AirplaneAnimationView @JvmOverloads constructor(
     }
 
     private fun startPause() {
-        currentPhase = AnimationPhase.PAUSE
-
         pauseAnimator = ValueAnimator.ofInt(255, 140, 255).apply {
             duration = PAUSE_DURATION_MS
             interpolator = LinearInterpolator()
@@ -118,17 +108,11 @@ class AirplaneAnimationView @JvmOverloads constructor(
             addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator) {
                     airplaneAlpha = 255
-                    startTransformPlaceholder()
                     onFlightCompleted?.invoke()
                 }
             })
             start()
         }
-    }
-
-    private fun startTransformPlaceholder() {
-        currentPhase = AnimationPhase.TRANSFORM
-        invalidate()
     }
 
     private fun updateAirplanePosition(angleRadians: Float) {
@@ -153,7 +137,7 @@ class AirplaneAnimationView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        canvas.drawColor(Color.parseColor("#F2F2F2"))
+        canvas.drawColor(Color.parseColor(BACKGROUND_COLOR))
 
         val plane = airplane ?: return
         val traj = trajectory ?: return

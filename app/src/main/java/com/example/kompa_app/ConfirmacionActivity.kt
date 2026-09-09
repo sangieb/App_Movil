@@ -28,7 +28,7 @@ class ConfirmacionActivity : AppCompatActivity() {
         btnContinuar.setOnClickListener {
             // TODO: cuando exista una pantalla principal/home de la app,
             // navega hacia allá con startActivity(...) antes del finishAffinity().
-            Toast.makeText(this, "¡Bienvenido a Kompa!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.welcome_toast), Toast.LENGTH_SHORT).show()
             finishAffinity() // Cierra todo el flujo de registro; no se puede volver atrás
         }
     }
