@@ -14,10 +14,5 @@
 .cxx
 local.properties
 
-# opencode autoskills
-.agents/
-.claude/
-skills-lock.json
-
 # IDE metadata sin trackear
 .idea/.name
