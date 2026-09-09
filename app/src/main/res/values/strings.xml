@@ -105,7 +105,7 @@
     <string name="nueva_error_direccion">No se encontró la dirección</string>
     <string name="nueva_error_direccion_vacia">Escribe una dirección para buscarla</string>
     <string name="nueva_hint_descripcion">Descripción</string>
-    <string name="nueva_hint_duracion">Duración (min)</string>
+    <string name="nueva_hint_duracion">Duración (horas)</string>
     <string name="nueva_hint_fecha">Fecha y hora de la actividad</string>
     <string name="nueva_bt_guardar">Guardar actividad</string>
     <string name="nueva_error_nombre">Escribe el nombre de la actividad</string>
