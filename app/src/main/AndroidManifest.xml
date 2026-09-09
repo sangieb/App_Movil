@@ -10,7 +10,7 @@
         android:theme="@style/Theme.Kompa">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".InicioActivity"
             android:exported="true"
             android:theme="@style/Theme.Kompa">
             <intent-filter>
@@ -18,6 +18,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".RegistroActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Kompa" />
+
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Kompa" />
+
+        <activity
+            android:name=".RecuperarContrasenaActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Kompa" />
 
         <activity
             android:name=".PerfilPreviewActivity"

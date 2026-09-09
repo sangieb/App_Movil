@@ -2,6 +2,24 @@
 <resources>
     <string name="app_name">Kompa</string>
 
+    <!-- Activity inicio -->
+    <string name="inicio_content_desc_logo">Logo de Kompa</string>
+    <string name="inicio_bt_registrarse">Crear cuenta</string>
+    <string name="inicio_bt_iniciar_sesion">Iniciar sesión</string>
+
+    <!-- Activity login -->
+    <string name="login_titulo">Bienvenido de nuevo</string>
+    <string name="login_subtitulo">Inicia sesión para encontrar a tu próximo Kompa de viaje</string>
+    <string name="login_boton">Iniciar sesión</string>
+    <string name="login_link_olvide">¿Olvidaste tu contraseña?</string>
+    <string name="error_login_password">Ingresa tu contraseña</string>
+
+    <!-- Activity recuperar contraseña -->
+    <string name="recuperar_titulo">Recuperar contraseña</string>
+    <string name="recuperar_descripcion">Te enviaremos un enlace al correo que registraste para restablecer tu contraseña.</string>
+    <string name="recuperar_boton">Enviar correo de recuperación</string>
+    <string name="recuperar_toast_enviado">Te enviaremos un enlace de recuperación a tu correo</string>
+
     <!-- Activity main (registro) -->
     <string name="main_titulo">Crea tu cuenta</string>
     <string name="main_subtitulo">Encuentra a tu próximo grupo de viaje o amistad</string>
