@@ -22,21 +22,25 @@
         <activity
             android:name=".RegistroActivity"
             android:exported="false"
+            android:parentActivityName=".InicioActivity"
             android:theme="@style/Theme.Kompa" />
 
         <activity
             android:name=".LoginActivity"
             android:exported="false"
+            android:parentActivityName=".InicioActivity"
             android:theme="@style/Theme.Kompa" />
 
         <activity
             android:name=".RecuperarContrasenaActivity"
             android:exported="false"
+            android:parentActivityName=".LoginActivity"
             android:theme="@style/Theme.Kompa" />
 
         <activity
             android:name=".PerfilPreviewActivity"
             android:exported="false"
+            android:parentActivityName=".RegistroActivity"
             android:theme="@style/Theme.Kompa" />
 
         <activity
