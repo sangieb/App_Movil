@@ -1,4 +1,4 @@
-package com.example.kompa_app
+package com.example.kompa_app.ui.auth.registro
 
 import android.app.DatePickerDialog
 import android.content.Intent
@@ -19,6 +19,9 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
+import com.example.kompa_app.Constantes
+import com.example.kompa_app.R
+import com.example.kompa_app.ui.perfil.preview.PerfilPreviewActivity
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale

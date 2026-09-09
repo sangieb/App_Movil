@@ -1,12 +1,15 @@
-package com.example.kompa_app
+package com.example.kompa_app.ui.perfil.confirmacion
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.kompa_app.Constantes
+import com.example.kompa_app.R
 import com.example.kompa_app.data.PerfilStore
 import com.example.kompa_app.ui.home.HomeActivity
+import com.example.kompa_app.ui.widget.animacion.AirplaneAnimationView
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 

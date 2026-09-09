@@ -18,7 +18,7 @@
         android:theme="@style/Theme.Kompa">
 
         <activity
-            android:name=".InicioActivity"
+            android:name=".ui.inicio.InicioActivity"
             android:exported="true"
             android:theme="@style/Theme.Kompa">
             <intent-filter>
@@ -28,31 +28,31 @@
         </activity>
 
         <activity
-            android:name=".RegistroActivity"
+            android:name=".ui.auth.registro.RegistroActivity"
             android:exported="false"
-            android:parentActivityName=".InicioActivity"
+            android:parentActivityName=".ui.inicio.InicioActivity"
             android:theme="@style/Theme.Kompa" />
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".ui.auth.login.LoginActivity"
             android:exported="false"
-            android:parentActivityName=".InicioActivity"
+            android:parentActivityName=".ui.inicio.InicioActivity"
             android:theme="@style/Theme.Kompa" />
 
         <activity
-            android:name=".RecuperarContrasenaActivity"
+            android:name=".ui.auth.recuperar.RecuperarContrasenaActivity"
             android:exported="false"
-            android:parentActivityName=".LoginActivity"
+            android:parentActivityName=".ui.auth.login.LoginActivity"
             android:theme="@style/Theme.Kompa" />
 
         <activity
-            android:name=".PerfilPreviewActivity"
+            android:name=".ui.perfil.preview.PerfilPreviewActivity"
             android:exported="false"
-            android:parentActivityName=".RegistroActivity"
+            android:parentActivityName=".ui.auth.registro.RegistroActivity"
             android:theme="@style/Theme.Kompa" />
 
         <activity
-            android:name=".ConfirmacionActivity"
+            android:name=".ui.perfil.confirmacion.ConfirmacionActivity"
             android:exported="false"
             android:theme="@style/Theme.Kompa" />
 

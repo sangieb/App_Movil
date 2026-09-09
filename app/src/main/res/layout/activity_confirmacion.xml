@@ -42,7 +42,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <com.example.kompa_app.AirplaneAnimationView
+    <com.example.kompa_app.ui.widget.animacion.AirplaneAnimationView
         android:id="@+id/airplaneAnimationView"
         android:layout_width="0dp"
         android:layout_height="0dp"

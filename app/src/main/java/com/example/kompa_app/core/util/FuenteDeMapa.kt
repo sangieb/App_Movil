@@ -1,4 +1,4 @@
-package com.example.kompa_app.util
+package com.example.kompa_app.core.util
 
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase
 import org.osmdroid.util.MapTileIndex

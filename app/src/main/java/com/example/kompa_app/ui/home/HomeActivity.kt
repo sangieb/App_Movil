@@ -18,8 +18,8 @@ import com.example.kompa_app.data.ActividadRepository
 import com.example.kompa_app.data.ActividadStore
 import com.example.kompa_app.ui.lista.ListaActividadesActivity
 import com.example.kompa_app.ui.nueva.NuevaActividadActivity
-import com.example.kompa_app.util.FuenteDeMapa
-import com.example.kompa_app.util.UbicacionHelper
+import com.example.kompa_app.core.util.FuenteDeMapa
+import com.example.kompa_app.core.util.UbicacionHelper
 import kotlinx.coroutines.launch
 import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint

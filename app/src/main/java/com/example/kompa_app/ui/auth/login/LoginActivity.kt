@@ -1,13 +1,15 @@
-package com.example.kompa_app
+package com.example.kompa_app.ui.auth.login
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.kompa_app.R
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
+import com.example.kompa_app.ui.auth.recuperar.RecuperarContrasenaActivity
 import com.example.kompa_app.ui.home.HomeActivity
 import android.widget.TextView
 

@@ -1,4 +1,4 @@
-package com.example.kompa_app
+package com.example.kompa_app.ui.perfil.preview
 
 import android.content.Intent
 import android.net.Uri
@@ -10,6 +10,9 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.example.kompa_app.Constantes
+import com.example.kompa_app.R
+import com.example.kompa_app.ui.perfil.confirmacion.ConfirmacionActivity
 
 class PerfilPreviewActivity : AppCompatActivity() {
 

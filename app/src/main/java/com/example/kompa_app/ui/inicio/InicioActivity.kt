@@ -1,4 +1,4 @@
-package com.example.kompa_app
+package com.example.kompa_app.ui.inicio
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,9 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.example.kompa_app.R
+import com.example.kompa_app.ui.auth.login.LoginActivity
+import com.example.kompa_app.ui.auth.registro.RegistroActivity
 
 class InicioActivity : AppCompatActivity() {
 

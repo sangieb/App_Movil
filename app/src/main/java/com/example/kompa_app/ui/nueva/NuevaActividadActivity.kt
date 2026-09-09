@@ -21,10 +21,10 @@ import com.example.kompa_app.data.Actividad
 import com.example.kompa_app.data.ActividadRepository
 import com.example.kompa_app.data.ActividadStore
 import com.example.kompa_app.data.PerfilStore
-import com.example.kompa_app.util.FotoUtil
-import com.example.kompa_app.util.FuenteDeMapa
-import com.example.kompa_app.util.PaisPorNacionalidad
-import com.example.kompa_app.util.UbicacionHelper
+import com.example.kompa_app.core.util.FotoUtil
+import com.example.kompa_app.core.util.FuenteDeMapa
+import com.example.kompa_app.core.util.PaisPorNacionalidad
+import com.example.kompa_app.core.util.UbicacionHelper
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText

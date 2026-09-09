@@ -1,4 +1,4 @@
-package com.example.kompa_app
+package com.example.kompa_app.ui.widget.animacion
 
 import android.graphics.Color
 import android.graphics.Paint

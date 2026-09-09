@@ -1,6 +1,6 @@
 package com.example.kompa_app
 
-import com.example.kompa_app.util.PaisPorNacionalidad
+import com.example.kompa_app.core.util.PaisPorNacionalidad
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test

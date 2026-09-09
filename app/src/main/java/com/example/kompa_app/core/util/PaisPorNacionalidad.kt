@@ -1,4 +1,4 @@
-package com.example.kompa_app.util
+package com.example.kompa_app.core.util
 
 object PaisPorNacionalidad {
 
