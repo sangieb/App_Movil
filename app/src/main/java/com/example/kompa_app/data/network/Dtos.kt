@@ -5,3 +5,13 @@ data class NominatimResult(
     val lat: String? = null,
     val lon: String? = null
 )
+
+data class PublicacionDto(
+    val id: String? = null,
+    val titulo: String? = null,
+    val cuerpo: String? = null,
+    val autor: String? = null,
+    val fechaCreacionLong: Long? = null,
+    val lat: Double? = null,
+    val lon: Double? = null
+)

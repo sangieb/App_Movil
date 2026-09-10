@@ -15,6 +15,80 @@
         app:title="@string/lista_titulo"
         app:titleTextColor="@color/purple_dark" />
 
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/sv_buscar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:queryHint="@string/lista_buscar_hint" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/cg_origen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        app:singleSelection="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_origen_todas"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/lista_filtro_origen_todas" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_origen_locales"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lista_filtro_origen_locales" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_origen_api"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lista_filtro_origen_api" />
+    </com.google.android.material.chip.ChipGroup>
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/cg_duracion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        app:singleSelection="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_duracion_cualquiera"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/lista_filtro_duracion_cualquiera" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_duracion_corta"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lista_filtro_duracion_corta" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_duracion_media"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lista_filtro_duracion_media" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_duracion_larga"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lista_filtro_duracion_larga" />
+    </com.google.android.material.chip.ChipGroup>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

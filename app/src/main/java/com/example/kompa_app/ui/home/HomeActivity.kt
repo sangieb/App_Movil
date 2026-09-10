@@ -12,12 +12,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.kompa_app.Constantes
+import com.example.kompa_app.KompaApplication
 import com.example.kompa_app.R
 import com.example.kompa_app.data.Actividad
-import com.example.kompa_app.data.ActividadRepository
-import com.example.kompa_app.data.ActividadStore
+import com.example.kompa_app.ui.inicio.InicioActivity
 import com.example.kompa_app.ui.lista.ListaActividadesActivity
 import com.example.kompa_app.ui.nueva.NuevaActividadActivity
+import com.example.kompa_app.ui.feed.FeedActivity
 import com.example.kompa_app.core.util.FuenteDeMapa
 import com.example.kompa_app.core.util.UbicacionHelper
 import kotlinx.coroutines.launch
@@ -29,11 +30,9 @@ import org.osmdroid.views.overlay.Overlay
 
 class HomeActivity : AppCompatActivity() {
 
-    private val repositorio by lazy {
-        ActividadRepository(ActividadStore(applicationContext))
-    }
+    private val graph by lazy { (application as KompaApplication).graph }
     private val viewModel: HomeViewModel by viewModels {
-        HomeViewModelFactory(repositorio)
+        HomeViewModelFactory(graph.actividadRepository)
     }
 
     private lateinit var mapa: MapView
@@ -70,6 +69,20 @@ class HomeActivity : AppCompatActivity() {
         findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_show_list)
             .setOnClickListener {
                 startActivity(Intent(this, ListaActividadesActivity::class.java))
+            }
+
+        findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_show_feed)
+            .setOnClickListener {
+                startActivity(Intent(this, FeedActivity::class.java))
+            }
+
+        findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_logout)
+            .setOnClickListener {
+                graph.authRepository.logout()
+                startActivity(
+                    Intent(this, InicioActivity::class.java)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                )
             }
 
         findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.fab_agregar)

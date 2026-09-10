@@ -16,11 +16,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import com.example.kompa_app.Constantes
+import com.example.kompa_app.KompaApplication
 import com.example.kompa_app.R
 import com.example.kompa_app.data.Actividad
-import com.example.kompa_app.data.ActividadRepository
-import com.example.kompa_app.data.ActividadStore
-import com.example.kompa_app.data.PerfilStore
 import com.example.kompa_app.core.util.FotoUtil
 import com.example.kompa_app.core.util.FuenteDeMapa
 import com.example.kompa_app.core.util.PaisPorNacionalidad
@@ -45,9 +43,7 @@ import org.osmdroid.views.overlay.Marker
 
 class NuevaActividadActivity : AppCompatActivity() {
 
-    private val repositorio by lazy {
-        ActividadRepository(ActividadStore(applicationContext))
-    }
+    private val graph by lazy { (application as KompaApplication).graph }
 
     private lateinit var mapa: MapView
     private var fotoUri: Uri? = null
@@ -223,14 +219,14 @@ class NuevaActividadActivity : AppCompatActivity() {
                 "${ubicacion.latitude + margen}"
         }
         val paises = if (viewbox == null) {
-            PaisPorNacionalidad.codigoPais(PerfilStore(this).nacionalidad())
+            PaisPorNacionalidad.codigoPais(graph.perfilRepository.nacionalidad())
         } else {
             null
         }
 
         lifecycleScope.launch {
             val resultado = withContext(Dispatchers.IO) {
-                repositorio.buscarDireccion(texto, viewbox = viewbox, paises = paises)
+                graph.actividadRepository.buscarDireccion(texto, viewbox = viewbox, paises = paises)
             }
             val lat = resultado?.lat?.toDoubleOrNull()
             val lon = resultado?.lon?.toDoubleOrNull()
@@ -272,7 +268,7 @@ class NuevaActividadActivity : AppCompatActivity() {
     private fun buscarNombreUbicacion(lat: Double, lon: Double) {
         lifecycleScope.launch {
             val nombre = withContext(Dispatchers.IO) {
-                repositorio.nombreUbicacion(lat, lon)
+                graph.actividadRepository.nombreUbicacion(lat, lon)
             }
             findViewById<TextInputEditText>(R.id.et_ubicacion).setText(
                 nombre.ifBlank { getString(R.string.nueva_ubicacion_sin_nombre) }
@@ -366,7 +362,9 @@ class NuevaActividadActivity : AppCompatActivity() {
                 ubicacion = ubicacion,
                 lat = lat,
                 lon = lon,
-                creadoPor = getString(R.string.nueva_creador_tu),
+                creadoPor = graph.perfilRepository.perfilActual()
+                    ?.nombre?.takeIf { it.isNotBlank() }
+                    ?: getString(R.string.nueva_creador_tu),
                 duracionMin = duracionMin,
                 fechaCreacionLong = System.currentTimeMillis(),
                 fechaActividadLong = fechaActividad,
@@ -374,7 +372,7 @@ class NuevaActividadActivity : AppCompatActivity() {
                 origen = "local"
             )
             withContext(Dispatchers.IO) {
-                repositorio.guardarNueva(actividad)
+                graph.actividadRepository.guardarNueva(actividad)
             }
             guardando = false
             Toast.makeText(this@NuevaActividadActivity, getString(R.string.nueva_guardada), Toast.LENGTH_SHORT).show()

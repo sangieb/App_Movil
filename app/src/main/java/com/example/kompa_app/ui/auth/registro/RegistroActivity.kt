@@ -216,6 +216,8 @@ class RegistroActivity : AppCompatActivity() {
         val bundle = Bundle().apply {
             putString(Constantes.EXTRA_NOMBRE, nombre)
             putString(Constantes.EXTRA_CORREO, correo)
+            putString(Constantes.EXTRA_PASSWORD,
+                findViewById<TextInputEditText>(R.id.et_password).text.toString())
             putString(Constantes.EXTRA_FECHA_NACIMIENTO, fecha)
             putString(Constantes.EXTRA_NACIONALIDAD, nacionalidad)
             putString(Constantes.EXTRA_GENERO, generoSeleccionado)

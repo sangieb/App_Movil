@@ -13,6 +13,8 @@
     <string name="login_boton">Iniciar sesión</string>
     <string name="login_link_olvide">¿Olvidaste tu contraseña?</string>
     <string name="error_login_password">Ingresa tu contraseña</string>
+    <string name="login_error_usuario_no_existe">Este correo aún no está registrado</string>
+    <string name="login_error_password_incorrecta">Contraseña incorrecta</string>
 
     <!-- Activity recuperar contraseña -->
     <string name="recuperar_titulo">Recuperar contraseña</string>
@@ -90,9 +92,17 @@
     <!-- Activity home -->
     <string name="home_titulo">Kompa</string>
     <string name="home_bt_show_list">Show list</string>
+    <string name="home_bt_show_feed">Feed</string>
+    <string name="home_bt_logout">Salir</string>
     <string name="home_cd_agregar">Agregar actividad</string>
     <string name="home_cd_centrar">Centrar mapa</string>
     <string name="home_permiso_negado">Usaremos la ubicación por defecto</string>
+
+    <!-- Activity feed de publicaciones -->
+    <string name="feed_titulo">Feed de publicaciones</string>
+    <string name="feed_vacio">Todavía no hay publicaciones</string>
+    <string name="feed_error">No pudimos cargar las publicaciones</string>
+    <string name="feed_reintentar">Reintentar</string>
 
     <!-- Activity nueva actividad -->
     <string name="nueva_titulo">Nueva actividad</string>
@@ -122,6 +132,14 @@
     <!-- Activity lista de actividades -->
     <string name="lista_titulo">Actividades cerca</string>
     <string name="lista_vacia">Todavía no hay actividades cerca</string>
+    <string name="lista_buscar_hint">Buscar por nombre, lugar u origen…</string>
+    <string name="lista_filtro_origen_todas">Todas</string>
+    <string name="lista_filtro_origen_locales">Locales</string>
+    <string name="lista_filtro_origen_api">API</string>
+    <string name="lista_filtro_duracion_cualquiera">Cualquier duración</string>
+    <string name="lista_filtro_duracion_corta">Menos de 1 h</string>
+    <string name="lista_filtro_duracion_media">1 a 3 h</string>
+    <string name="lista_filtro_duracion_larga">Más de 3 h</string>
     <string name="item_sin_dato">—</string>
     <string name="item_creado_por">Creada por: %1$s</string>
     <string name="item_duracion_minutos">%1$d min</string>
