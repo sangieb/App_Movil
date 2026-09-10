@@ -18,7 +18,9 @@ class PerfilStore(context: Context) : PerfilStorage {
             putString(Constantes.KEY_CONECTAR, perfil.conectar)
             putString(Constantes.KEY_IDIOMAS, perfil.idiomas)
             putString(Constantes.KEY_INTERESES, perfil.intereses)
-            perfil.fotoUri?.let { putString(Constantes.KEY_FOTO_URI, it) }
+            perfil.fotoUri?.let {
+            putString(Constantes.KEY_FOTO_URI, it)
+        } ?: remove(Constantes.KEY_FOTO_URI)
         }
     }
 

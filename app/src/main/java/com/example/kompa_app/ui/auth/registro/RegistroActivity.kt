@@ -14,17 +14,18 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
 import com.example.kompa_app.Constantes
 import com.example.kompa_app.R
+import com.example.kompa_app.core.util.FechaFormatos
+import com.example.kompa_app.core.util.configurarToolbar
+import com.example.kompa_app.core.util.mostrarError
+import com.example.kompa_app.core.util.navegarAtras
 import com.example.kompa_app.ui.perfil.preview.PerfilPreviewActivity
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Locale
 
 class RegistroActivity : AppCompatActivity() {
 
@@ -76,10 +77,7 @@ class RegistroActivity : AppCompatActivity() {
     }
 
     private fun setupToolbar() {
-        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+        configurarToolbar(mostrarTitulo = false)
     }
 
     private fun setupFoto() {
@@ -101,8 +99,7 @@ class RegistroActivity : AppCompatActivity() {
                 { _, year, month, day ->
                     val fechaSeleccionada = Calendar.getInstance()
                     fechaSeleccionada.set(year, month, day)
-                    val formato = SimpleDateFormat("dd/MM/yyyy", Locale.forLanguageTag("es"))
-                    etFechaNacimiento.setText(formato.format(fechaSeleccionada.time))
+                    etFechaNacimiento.setText(FechaFormatos.fecha(fechaSeleccionada.timeInMillis))
                 },
                 calendario.get(Calendar.YEAR),
                 calendario.get(Calendar.MONTH),
@@ -249,7 +246,7 @@ class RegistroActivity : AppCompatActivity() {
             nombre.length < 2 -> mostrarError(getString(R.string.error_nombre_corto))
             correo.isBlank() -> mostrarError(getString(R.string.error_correo))
             !Patterns.EMAIL_ADDRESS.matcher(correo).matches() -> mostrarError(getString(R.string.error_correo_invalido))
-            password.length < 6 -> mostrarError(getString(R.string.error_password))
+            password.length < Constantes.MIN_PASSWORD_LEN -> mostrarError(getString(R.string.error_password))
             fecha.isBlank() -> mostrarError(getString(R.string.error_fecha))
             !esMayorDeEdad(fecha) -> mostrarError(getString(R.string.error_mayor_edad))
             nacionalidad.isBlank() -> mostrarError(getString(R.string.error_nacionalidad))
@@ -264,8 +261,7 @@ class RegistroActivity : AppCompatActivity() {
 
     private fun esMayorDeEdad(fecha: String): Boolean {
         return try {
-            val formato = SimpleDateFormat("dd/MM/yyyy", Locale.forLanguageTag("es"))
-            val fechaNacimiento = formato.parse(fecha) ?: return false
+            val fechaNacimiento = FechaFormatos.parsearFecha(fecha) ?: return false
             val calendarioNacimiento = Calendar.getInstance().apply { time = fechaNacimiento }
             val hoy = Calendar.getInstance()
 
@@ -277,18 +273,13 @@ class RegistroActivity : AppCompatActivity() {
                 edad--
             }
             edad >= 18
-        } catch (e: Exception) {
+        } catch (_: java.text.ParseException) {
             false
         }
     }
 
-    private fun mostrarError(mensaje: String): Boolean {
-        Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show()
-        return false
-    }
-
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressedDispatcher.onBackPressed()
+        navegarAtras()
         return true
     }
 }

@@ -33,12 +33,17 @@ object Constantes {
     const val KEY_REFRESH_TOKEN = "refresh_token"
     const val KEY_EXPIRA_EN = "expira_en"
 
+    // Autenticación.
+    const val MIN_PASSWORD_LEN = 6
+
+    // Origen de actividades.
+    const val ORIGEN_LOCAL = "local"
+    const val ORIGEN_API = "api"
+
     // API propia (endpoint del feed). Ajustar a la URL real del backend.
     const val API_BASE_URL = "https://api.kompa.example/"
 
     // Actividades: persistencia local.
-    const val PREF_ACTIVIDADES = "pref_actividades"
-    const val KEY_ACTIVIDADES = "lista_actividades"
     const val PREF_OSMDROID = "pref_osmdroid"
     const val LAT_DEFAULT = 4.7110
     const val LON_DEFAULT = -74.0721

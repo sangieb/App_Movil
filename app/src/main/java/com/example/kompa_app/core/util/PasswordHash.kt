@@ -29,7 +29,7 @@ object PasswordHash {
         MessageDigest.getInstance(ALGORITMO)
             .digest(sal + password.toByteArray(Charsets.UTF_8))
 
-    fun codificarHex(bytes: ByteArray): String {
+    internal fun codificarHex(bytes: ByteArray): String {
         val hex = StringBuilder(bytes.size * 2)
         bytes.forEach { byte ->
             val valor = byte.toInt() and 0xFF
@@ -39,7 +39,7 @@ object PasswordHash {
         return hex.toString()
     }
 
-    fun decodificarHex(hex: String): ByteArray {
+    internal fun decodificarHex(hex: String): ByteArray {
         if (hex.length % 2 != 0) throw IllegalArgumentException("Hex inválido")
         return ByteArray(hex.length / 2) { indice ->
             val posicion = indice * 2

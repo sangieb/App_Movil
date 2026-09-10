@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.kompa_app.data.Actividad
 import com.example.kompa_app.data.ActividadesEjemplo
-import com.example.kompa_app.data.Publicacion
 import com.example.kompa_app.data.cuenta.Cuenta
 
 class KompaDbHelper(context: Context) : SQLiteOpenHelper(
@@ -19,14 +18,12 @@ class KompaDbHelper(context: Context) : SQLiteOpenHelper(
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(DDL_ACTIVIDADES)
-        db.execSQL(DDL_PUBLICACIONES)
         db.execSQL(DDL_CUENTAS)
         insertarActividades(db, ActividadesEjemplo.lista())
     }
 
     override fun onUpgrade(db: SQLiteDatabase, versionAntigua: Int, versionNueva: Int) {
         if (versionAntigua < 2) {
-            db.execSQL(DDL_PUBLICACIONES)
             db.execSQL(DDL_CUENTAS)
         }
     }
@@ -109,33 +106,6 @@ class KompaDbHelper(context: Context) : SQLiteOpenHelper(
         ).use { cursor -> cursor.aListaActividades() }
     }
 
-    fun insertarPublicaciones(publicaciones: List<Publicacion>) {
-        synchronized(this) {
-            val db = writableDatabase
-            db.beginTransaction()
-            try {
-                publicaciones.forEach { publicacion ->
-                    db.insertWithOnConflict(TABLA_PUBLICACIONES, null, publicacion.aContentValues(),
-                        SQLiteDatabase.CONFLICT_REPLACE)
-                }
-                db.setTransactionSuccessful()
-            } finally {
-                db.endTransaction()
-            }
-        }
-    }
-
-    fun obtenerPublicaciones(): List<Publicacion> =
-        readableDatabase.query(
-            TABLA_PUBLICACIONES,
-            null,
-            null,
-            null,
-            null,
-            null,
-            "$COL_FECHA_CREACION DESC"
-        ).use { cursor -> cursor.aListaPublicaciones() }
-
     private fun Actividad.aContentValues(): ContentValues = ContentValues().apply {
         put(COL_ID, id)
         put(COL_NOMBRE, nombre)
@@ -149,16 +119,6 @@ class KompaDbHelper(context: Context) : SQLiteOpenHelper(
         fechaActividadLong?.let { put(COL_FECHA_ACTIVIDAD, it) }
         fotoRuta?.let { put(COL_FOTO, it) }
         put(COL_ORIGEN, origen)
-    }
-
-    private fun Publicacion.aContentValues(): ContentValues = ContentValues().apply {
-        put(COL_ID, id)
-        put(COL_NOMBRE, titulo)
-        put(COL_DESCRIPCION, cuerpo)
-        put(COL_CREADO_POR, autor)
-        fechaCreacionLong?.let { put(COL_FECHA_CREACION, it) }
-        lat?.let { put(COL_LAT, it) }
-        lon?.let { put(COL_LON, it) }
     }
 
     private fun Cursor.aListaActividades(): List<Actividad> {
@@ -184,24 +144,6 @@ class KompaDbHelper(context: Context) : SQLiteOpenHelper(
         return resultado
     }
 
-    private fun Cursor.aListaPublicaciones(): List<Publicacion> {
-        val resultado = ArrayList<Publicacion>(count)
-        while (moveToNext()) {
-            resultado.add(
-                Publicacion(
-                    id = getString(getColumnIndexOrThrow(COL_ID)),
-                    titulo = getString(getColumnIndexOrThrow(COL_NOMBRE)),
-                    cuerpo = getString(getColumnIndexOrThrow(COL_DESCRIPCION)),
-                    autor = getString(getColumnIndexOrThrow(COL_CREADO_POR)),
-                    fechaCreacionLong = leerLong(COL_FECHA_CREACION),
-                    lat = leerDouble(COL_LAT),
-                    lon = leerDouble(COL_LON)
-                )
-            )
-        }
-        return resultado
-    }
-
     private fun Cursor.leerTexto(columna: String): String? =
         if (isNull(getColumnIndexOrThrow(columna))) null else getString(getColumnIndexOrThrow(columna))
 
@@ -210,9 +152,6 @@ class KompaDbHelper(context: Context) : SQLiteOpenHelper(
 
     private fun Cursor.leerLong(columna: String): Long? =
         if (isNull(getColumnIndexOrThrow(columna))) null else getLong(getColumnIndexOrThrow(columna))
-
-    private fun Cursor.leerDouble(columna: String): Double? =
-        if (isNull(getColumnIndexOrThrow(columna))) null else getDouble(getColumnIndexOrThrow(columna))
 
     private fun insertarActividades(db: SQLiteDatabase, actividades: List<Actividad>) {
         db.beginTransaction()
@@ -232,7 +171,6 @@ class KompaDbHelper(context: Context) : SQLiteOpenHelper(
         const val VERSION_DB = 2
 
         const val TABLA_ACTIVIDADES = "actividades"
-        const val TABLA_PUBLICACIONES = "publicaciones"
         const val TABLA_CUENTAS = "cuentas"
 
         const val COL_ID = "id"
@@ -265,18 +203,6 @@ class KompaDbHelper(context: Context) : SQLiteOpenHelper(
                 $COL_FECHA_ACTIVIDAD INTEGER,
                 $COL_FOTO TEXT,
                 $COL_ORIGEN TEXT NOT NULL
-            )
-        """.trimIndent()
-
-        val DDL_PUBLICACIONES = """
-            CREATE TABLE IF NOT EXISTS $TABLA_PUBLICACIONES (
-                $COL_ID TEXT PRIMARY KEY,
-                $COL_NOMBRE TEXT NOT NULL,
-                $COL_DESCRIPCION TEXT NOT NULL,
-                $COL_CREADO_POR TEXT NOT NULL,
-                $COL_FECHA_CREACION INTEGER,
-                $COL_LAT REAL,
-                $COL_LON REAL
             )
         """.trimIndent()
 

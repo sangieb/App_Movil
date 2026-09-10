@@ -10,11 +10,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kompa_app.R
+import com.example.kompa_app.core.util.FechaFormatos
 import com.example.kompa_app.data.Actividad
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class ActividadAdapter :
     ListAdapter<Actividad, ActividadAdapter.ActividadViewHolder>(DiffActividad) {
@@ -47,8 +45,8 @@ class ActividadAdapter :
             tvCreador.text = contexto.getString(R.string.item_creado_por, actividad.creadoPor)
             tvDuracion.text = actividad.duracionMin?.let { formatearDuracion(contexto, it) }
                 ?: contexto.getString(R.string.item_sin_dato)
-            tvFecha.text = actividad.fechaActividadLong?.let { formatearFechaActividad(it) }
-                ?: actividad.fechaCreacionLong?.let { formatearFecha(it) }
+            tvFecha.text = actividad.fechaActividadLong?.let { FechaFormatos.fechaHora(it) }
+                ?: actividad.fechaCreacionLong?.let { FechaFormatos.fecha(it) }
                 ?: contexto.getString(R.string.item_sin_dato)
 
             val fotoRuta = actividad.fotoRuta
@@ -67,16 +65,6 @@ class ActividadAdapter :
                 resto == 0 -> contexto.getString(R.string.item_duracion_horas, horas)
                 else -> contexto.getString(R.string.item_duracion_horas_minutos, horas, resto)
             }
-        }
-
-        private fun formatearFecha(epochMillis: Long): String {
-            val formato = SimpleDateFormat("dd/MM/yyyy", Locale.forLanguageTag("es"))
-            return formato.format(Date(epochMillis))
-        }
-
-        private fun formatearFechaActividad(epochMillis: Long): String {
-            val formato = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.forLanguageTag("es"))
-            return formato.format(Date(epochMillis))
         }
     }
 

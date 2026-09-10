@@ -8,10 +8,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.kompa_app.KompaApplication
 import com.example.kompa_app.R
+import com.example.kompa_app.core.util.configurarToolbar
+import com.example.kompa_app.core.util.mostrarError
+import com.example.kompa_app.core.util.navegarAtras
 import com.example.kompa_app.data.session.ResultadoLogin
 import com.example.kompa_app.ui.auth.recuperar.RecuperarContrasenaActivity
 import com.example.kompa_app.ui.home.HomeActivity
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 
@@ -23,10 +25,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+        configurarToolbar(mostrarTitulo = false)
 
         findViewById<MaterialButton>(R.id.btn_login).setOnClickListener {
             if (validarCampos()) {
@@ -69,13 +68,8 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun mostrarError(mensaje: String): Boolean {
-        Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show()
-        return false
-    }
-
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressedDispatcher.onBackPressed()
+        navegarAtras()
         return true
     }
 }

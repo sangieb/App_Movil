@@ -5,12 +5,15 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.core.graphics.scale
+import android.util.Log
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import java.util.UUID
 
 object FotoUtil {
 
+    private const val TAG = "Kompa_FotoUtil"
     private const val MAX_LADO = 800
     private const val CALIDAD_JPEG = 80
 
@@ -33,7 +36,8 @@ object FotoUtil {
                 original.recycle()
             }
             archivo.absolutePath
-        } catch (e: Exception) {
+        } catch (e: IOException) {
+            Log.w(TAG, "No se pudo guardar la foto", e)
             null
         }
     }

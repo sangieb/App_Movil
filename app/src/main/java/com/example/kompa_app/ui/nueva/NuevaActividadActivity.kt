@@ -20,16 +20,17 @@ import com.example.kompa_app.KompaApplication
 import com.example.kompa_app.R
 import com.example.kompa_app.data.Actividad
 import com.example.kompa_app.core.util.FotoUtil
+import com.example.kompa_app.core.util.FechaFormatos
 import com.example.kompa_app.core.util.FuenteDeMapa
 import com.example.kompa_app.core.util.PaisPorNacionalidad
 import com.example.kompa_app.core.util.UbicacionHelper
-import com.google.android.material.appbar.MaterialToolbar
+import com.example.kompa_app.core.util.configurarToolbar
+import com.example.kompa_app.core.util.mostrarError
+import com.example.kompa_app.core.util.navegarAtras
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Locale
 import java.util.UUID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,12 +54,16 @@ class NuevaActividadActivity : AppCompatActivity() {
     private var guardando = false
     private var fechaActividadSeleccionada: Long? = null
 
+    private lateinit var etUbicacion: TextInputEditText
+    private lateinit var imgFotoGrupo: android.widget.ImageView
+    private lateinit var etFechaActividad: TextInputEditText
+
     private val selectorFoto = registerForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let {
             fotoUri = it
-            findViewById<android.widget.ImageView>(R.id.img_foto_grupo).apply {
+            imgFotoGrupo.apply {
                 setImageURI(it)
                 setPadding(0, 0, 0, 0)
                 scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
@@ -72,9 +77,11 @@ class NuevaActividadActivity : AppCompatActivity() {
         Configuration.getInstance().userAgentValue = Constantes.USER_AGENT
         setContentView(R.layout.activity_nueva_actividad)
 
-        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        configurarToolbar()
+
+etUbicacion = findViewById(R.id.et_ubicacion)
+        imgFotoGrupo = findViewById(R.id.img_foto_grupo)
+        etFechaActividad = findViewById(R.id.et_fecha_actividad)
 
         configurarMapa()
         configurarSeleccionFoto()
@@ -113,7 +120,7 @@ class NuevaActividadActivity : AppCompatActivity() {
         outState.putString(EXTRA_FOTO, fotoUri?.toString())
         outState.putDouble(EXTRA_LAT, latSeleccionada ?: -1.0)
         outState.putDouble(EXTRA_LON, lonSeleccionada ?: -1.0)
-        outState.putString(EXTRA_UBICACION, findViewById<TextInputEditText>(R.id.et_ubicacion).text.toString())
+        outState.putString(EXTRA_UBICACION, etUbicacion.text.toString())
         outState.putLong(EXTRA_FECHA, fechaActividadSeleccionada ?: -1L)
     }
 
@@ -124,7 +131,7 @@ class NuevaActividadActivity : AppCompatActivity() {
         savedInstanceState.getString(EXTRA_FOTO)?.let { texto ->
             val uri = texto.toUri()
             fotoUri = uri
-            findViewById<android.widget.ImageView>(R.id.img_foto_grupo).apply {
+            imgFotoGrupo.apply {
                 setImageURI(uri)
                 setPadding(0, 0, 0, 0)
                 scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
@@ -137,15 +144,13 @@ class NuevaActividadActivity : AppCompatActivity() {
             lonSeleccionada = lon
             colocarMarcador(lat, lon)
         }
-        findViewById<TextInputEditText>(R.id.et_ubicacion).setText(
+        etUbicacion.setText(
             savedInstanceState.getString(EXTRA_UBICACION).orEmpty()
         )
         val fecha = savedInstanceState.getLong(EXTRA_FECHA, -1L)
         if (fecha != -1L) {
             fechaActividadSeleccionada = fecha
-            val etFechaActividad = findViewById<TextInputEditText>(R.id.et_fecha_actividad)
-            val formato = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.forLanguageTag("es"))
-            etFechaActividad.setText(formato.format(java.util.Date(fecha)))
+            etFechaActividad.setText(FechaFormatos.fechaHora(fecha))
         }
     }
 
@@ -178,7 +183,7 @@ class NuevaActividadActivity : AppCompatActivity() {
     }
 
     private fun configurarBusquedaDireccion() {
-        findViewById<TextInputEditText>(R.id.et_ubicacion).setOnEditorActionListener { _, actionId, _ ->
+        etUbicacion.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 buscarDireccion()
                 true
@@ -204,7 +209,7 @@ class NuevaActividadActivity : AppCompatActivity() {
     }
 
     private fun buscarDireccion() {
-        val texto = findViewById<TextInputEditText>(R.id.et_ubicacion).text.toString().trim()
+        val texto = etUbicacion.text.toString().trim()
         if (texto.isEmpty()) {
             mostrarError(getString(R.string.nueva_error_direccion_vacia))
             return
@@ -235,7 +240,7 @@ class NuevaActividadActivity : AppCompatActivity() {
                 lonSeleccionada = lon
                 mapa.controller.animateTo(GeoPoint(lat, lon))
                 colocarMarcador(lat, lon)
-                findViewById<TextInputEditText>(R.id.et_ubicacion).setText(
+                etUbicacion.setText(
                     resultado.display_name.orEmpty()
                 )
             } else {
@@ -270,7 +275,7 @@ class NuevaActividadActivity : AppCompatActivity() {
             val nombre = withContext(Dispatchers.IO) {
                 graph.actividadRepository.nombreUbicacion(lat, lon)
             }
-            findViewById<TextInputEditText>(R.id.et_ubicacion).setText(
+            etUbicacion.setText(
                 nombre.ifBlank { getString(R.string.nueva_ubicacion_sin_nombre) }
             )
         }
@@ -278,13 +283,11 @@ class NuevaActividadActivity : AppCompatActivity() {
 
     private fun configurarSeleccionFoto() {
         val abrirGaleria = { selectorFoto.launch("image/*") }
-        findViewById<android.widget.ImageView>(R.id.img_foto_grupo).setOnClickListener { abrirGaleria() }
+        imgFotoGrupo.setOnClickListener { abrirGaleria() }
         findViewById<MaterialButton>(R.id.btn_agregar_foto).setOnClickListener { abrirGaleria() }
     }
 
     private fun configurarSeleccionFecha() {
-        val etFechaActividad = findViewById<TextInputEditText>(R.id.et_fecha_actividad)
-        val formato = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.forLanguageTag("es"))
         etFechaActividad.setOnClickListener {
             val calendario = Calendar.getInstance()
             DatePickerDialog(
@@ -298,7 +301,7 @@ class NuevaActividadActivity : AppCompatActivity() {
                                 set(Calendar.MILLISECOND, 0)
                             }
                             fechaActividadSeleccionada = fecha.timeInMillis
-                            etFechaActividad.setText(formato.format(fecha.time))
+                            etFechaActividad.setText(FechaFormatos.fechaHora(fecha.timeInMillis))
                         },
                         calendario.get(Calendar.HOUR_OF_DAY),
                         calendario.get(Calendar.MINUTE),
@@ -354,7 +357,7 @@ class NuevaActividadActivity : AppCompatActivity() {
                     FotoUtil.guardarFoto(this@NuevaActividadActivity, ruta)
                 }
             }
-            val ubicacion = findViewById<TextInputEditText>(R.id.et_ubicacion).text.toString()
+            val ubicacion = etUbicacion.text.toString()
             val actividad = Actividad(
                 id = UUID.randomUUID().toString(),
                 nombre = nombre,
@@ -369,7 +372,7 @@ class NuevaActividadActivity : AppCompatActivity() {
                 fechaCreacionLong = System.currentTimeMillis(),
                 fechaActividadLong = fechaActividad,
                 fotoRuta = rutaFoto,
-                origen = "local"
+                origen = Constantes.ORIGEN_LOCAL
             )
             withContext(Dispatchers.IO) {
                 graph.actividadRepository.guardarNueva(actividad)
@@ -380,13 +383,8 @@ class NuevaActividadActivity : AppCompatActivity() {
         }
     }
 
-    private fun mostrarError(mensaje: String): Boolean {
-        Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show()
-        return false
-    }
-
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressedDispatcher.onBackPressed()
+        navegarAtras()
         return true
     }
 

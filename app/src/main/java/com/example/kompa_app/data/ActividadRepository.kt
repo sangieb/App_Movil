@@ -1,5 +1,6 @@
 package com.example.kompa_app.data
 
+import android.util.Log
 import com.example.kompa_app.data.db.KompaDbHelper
 import com.example.kompa_app.data.network.ApiClient
 import com.example.kompa_app.data.network.NominatimResult
@@ -35,7 +36,8 @@ class ActividadRepository(
             apiClient.nominatimApi.reverse(latitud = lat, longitud = lon).display_name.orEmpty()
         } catch (e: CancellationException) {
             throw e
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Log.w(TAG, "Reverse geocoding fallido ($lat, $lon)", e)
             ""
         }
     }
@@ -54,8 +56,13 @@ class ActividadRepository(
             ).firstOrNull()
         } catch (e: CancellationException) {
             throw e
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Log.w(TAG, "Búsqueda de dirección fallida: $direccion", e)
             null
         }
+    }
+
+    companion object {
+        private const val TAG = "Kompa_ActividadRepo"
     }
 }

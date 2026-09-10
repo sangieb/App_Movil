@@ -1,5 +1,6 @@
 package com.example.kompa_app.data.session
 
+import com.example.kompa_app.Constantes
 import com.example.kompa_app.data.cuenta.CuentaStorage
 import java.util.UUID
 import java.util.concurrent.TimeUnit
@@ -17,7 +18,7 @@ class AuthRepository(
 ) {
 
     fun login(correo: String, password: String): ResultadoLogin {
-        if (correo.isBlank() || password.isBlank() || password.length < MIN_PASSWORD_LENGTH) {
+        if (correo.isBlank() || password.isBlank() || password.length < Constantes.MIN_PASSWORD_LEN) {
             return ResultadoLogin.CONTRASENA_INCORRECTA
         }
         if (!cuentas.existe(correo)) {
@@ -76,7 +77,6 @@ class AuthRepository(
         "$prefijo${UUID.randomUUID()}"
 
     private companion object {
-        const val MIN_PASSWORD_LENGTH = 6
         const val ACCESS_TOKEN_PREFIJO = "mock_access_"
         const val REFRESH_TOKEN_PREFIJO = "mock_refresh_"
         val ACCESS_DURACION_MS: Long = TimeUnit.MINUTES.toMillis(15)

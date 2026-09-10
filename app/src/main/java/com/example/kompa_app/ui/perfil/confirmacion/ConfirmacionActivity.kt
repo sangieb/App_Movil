@@ -8,10 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.kompa_app.Constantes
 import com.example.kompa_app.KompaApplication
 import com.example.kompa_app.R
+import com.example.kompa_app.core.util.configurarToolbar
+import com.example.kompa_app.core.util.navegarAtras
 import com.example.kompa_app.data.Perfil
 import com.example.kompa_app.ui.home.HomeActivity
 import com.example.kompa_app.ui.widget.animacion.AirplaneAnimationView
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 
 class ConfirmacionActivity : AppCompatActivity() {
@@ -24,10 +25,10 @@ class ConfirmacionActivity : AppCompatActivity() {
 
         persistirPerfil()
 
-        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar_confirmacion)
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+        configurarToolbar(
+            toolbarId = R.id.toolbar_confirmacion,
+            mostrarTitulo = false
+        )
 
         val airplaneView = findViewById<AirplaneAnimationView>(R.id.airplaneAnimationView)
         val btnContinuar = findViewById<MaterialButton>(R.id.btn_continuar)
@@ -59,24 +60,12 @@ class ConfirmacionActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressedDispatcher.onBackPressed()
+        navegarAtras()
         return true
     }
 
-    private fun persistirPerfil(): Perfil? {
-        val bundle = intent.getBundleExtra(Constantes.BUNDLE_DATOS) ?: return null
-        val perfil = Perfil(
-            nombre = bundle.getString(Constantes.EXTRA_NOMBRE).orEmpty(),
-            correo = bundle.getString(Constantes.EXTRA_CORREO).orEmpty(),
-            fechaNacimiento = bundle.getString(Constantes.EXTRA_FECHA_NACIMIENTO).orEmpty(),
-            nacionalidad = bundle.getString(Constantes.EXTRA_NACIONALIDAD).orEmpty(),
-            genero = bundle.getString(Constantes.EXTRA_GENERO).orEmpty(),
-            conectar = bundle.getString(Constantes.EXTRA_CONECTAR).orEmpty(),
-            idiomas = bundle.getString(Constantes.EXTRA_IDIOMAS).orEmpty(),
-            intereses = bundle.getString(Constantes.EXTRA_INTERESES).orEmpty(),
-            fotoUri = bundle.getString(Constantes.EXTRA_FOTO_URI)
-        )
-        graph.perfilRepository.guardar(perfil)
-        return perfil
+    private fun persistirPerfil() {
+        val bundle = intent.getBundleExtra(Constantes.BUNDLE_DATOS) ?: return
+        graph.perfilRepository.guardar(Perfil.deBundle(bundle))
     }
 }

@@ -8,10 +8,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kompa_app.R
+import com.example.kompa_app.core.util.FechaFormatos
 import com.example.kompa_app.data.Publicacion
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class FeedAdapter :
     ListAdapter<Publicacion, FeedAdapter.PublicacionViewHolder>(DiffPublicacion) {
@@ -37,13 +35,8 @@ class FeedAdapter :
             tvAutor.text = publicacion.autor
             tvTitulo.text = publicacion.titulo
             tvCuerpo.text = publicacion.cuerpo
-            tvFecha.text = publicacion.fechaCreacionLong?.let { formatearFecha(it) }
+            tvFecha.text = publicacion.fechaCreacionLong?.let { FechaFormatos.fechaHora(it) }
                 ?: itemView.context.getString(R.string.item_sin_dato)
-        }
-
-        private fun formatearFecha(epochMillis: Long): String {
-            val formato = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.forLanguageTag("es"))
-            return formato.format(Date(epochMillis))
         }
     }
 

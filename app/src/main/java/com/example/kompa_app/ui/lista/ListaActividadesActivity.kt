@@ -11,10 +11,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.kompa_app.Constantes
 import com.example.kompa_app.KompaApplication
 import com.example.kompa_app.R
+import com.example.kompa_app.core.util.configurarToolbar
+import com.example.kompa_app.core.util.navegarAtras
 import com.example.kompa_app.data.Actividad
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.chip.ChipGroup
 import kotlinx.coroutines.launch
 
@@ -30,9 +32,7 @@ class ListaActividadesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lista_actividades)
 
-        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        configurarToolbar()
 
         findViewById<RecyclerView>(R.id.rv_actividades).apply {
             layoutManager = LinearLayoutManager(this@ListaActividadesActivity)
@@ -76,8 +76,8 @@ class ListaActividadesActivity : AppCompatActivity() {
         val texto = findViewById<SearchView>(R.id.sv_buscar).query?.toString()?.trim().orEmpty()
 
         val origen = when (findViewById<ChipGroup>(R.id.cg_origen).checkedChipId) {
-            R.id.chip_origen_locales -> "local"
-            R.id.chip_origen_api -> "api"
+            R.id.chip_origen_locales -> Constantes.ORIGEN_LOCAL
+            R.id.chip_origen_api -> Constantes.ORIGEN_API
             else -> null
         }
 
@@ -105,7 +105,7 @@ class ListaActividadesActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressedDispatcher.onBackPressed()
+        navegarAtras()
         return true
     }
 }

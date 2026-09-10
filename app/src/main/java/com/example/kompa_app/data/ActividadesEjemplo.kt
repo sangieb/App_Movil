@@ -1,5 +1,7 @@
 package com.example.kompa_app.data
 
+import com.example.kompa_app.Constantes
+
 object ActividadesEjemplo {
 
     fun lista(): List<Actividad> = listOf(
@@ -14,7 +16,7 @@ object ActividadesEjemplo {
             duracionMin = 180,
             fechaCreacionLong = 1735689600000L,
             fotoRuta = null,
-            origen = "local"
+            origen = Constantes.ORIGEN_LOCAL
         ),
         Actividad(
             id = "ejemplo_museo_oro",
@@ -27,7 +29,7 @@ object ActividadesEjemplo {
             duracionMin = 120,
             fechaCreacionLong = 1735776000000L,
             fotoRuta = null,
-            origen = "local"
+            origen = Constantes.ORIGEN_LOCAL
         ),
         Actividad(
             id = "ejemplo_plaza_bolivar",
@@ -40,7 +42,7 @@ object ActividadesEjemplo {
             duracionMin = 90,
             fechaCreacionLong = 1735862400000L,
             fotoRuta = null,
-            origen = "local"
+            origen = Constantes.ORIGEN_LOCAL
         ),
         Actividad(
             id = "ejemplo_simon_bolivar",
@@ -53,7 +55,7 @@ object ActividadesEjemplo {
             duracionMin = 150,
             fechaCreacionLong = 1735948800000L,
             fotoRuta = null,
-            origen = "local"
+            origen = Constantes.ORIGEN_LOCAL
         ),
         Actividad(
             id = "ejemplo_jardin_botanico",
@@ -66,7 +68,7 @@ object ActividadesEjemplo {
             duracionMin = 120,
             fechaCreacionLong = 1736035200000L,
             fotoRuta = null,
-            origen = "local"
+            origen = Constantes.ORIGEN_LOCAL
         ),
         Actividad(
             id = "ejemplo_usaquen",
@@ -79,7 +81,7 @@ object ActividadesEjemplo {
             duracionMin = 120,
             fechaCreacionLong = 1736121600000L,
             fotoRuta = null,
-            origen = "local"
+            origen = Constantes.ORIGEN_LOCAL
         )
     )
 }

@@ -155,7 +155,7 @@ class HomeActivity : AppCompatActivity() {
                     setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
                     icon = ContextCompat.getDrawable(
                         this@HomeActivity,
-                        if (actividad.origen == "local") R.drawable.ic_marker_local else R.drawable.ic_marker_api
+                        if (actividad.origen == Constantes.ORIGEN_LOCAL) R.drawable.ic_marker_local else R.drawable.ic_marker_api
                     )
                 }
                 mapa.overlays.add(marcador)

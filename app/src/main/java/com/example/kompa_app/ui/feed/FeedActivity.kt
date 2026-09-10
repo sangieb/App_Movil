@@ -13,7 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kompa_app.KompaApplication
 import com.example.kompa_app.R
-import com.google.android.material.appbar.MaterialToolbar
+import com.example.kompa_app.core.util.configurarToolbar
+import com.example.kompa_app.core.util.navegarAtras
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
 
@@ -25,20 +26,28 @@ class FeedActivity : AppCompatActivity() {
     }
     private val adapter = FeedAdapter()
 
+    private lateinit var rvFeed: RecyclerView
+    private lateinit var tvVacio: TextView
+    private lateinit var tvError: TextView
+    private lateinit var btnReintentar: MaterialButton
+    private lateinit var pbCargando: ProgressBar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_feed)
 
-        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        configurarToolbar()
 
-        findViewById<RecyclerView>(R.id.rv_feed).apply {
+        rvFeed = findViewById<RecyclerView>(R.id.rv_feed).apply {
             layoutManager = LinearLayoutManager(this@FeedActivity)
             adapter = this@FeedActivity.adapter
         }
+        tvVacio = findViewById(R.id.tv_vacio)
+        tvError = findViewById(R.id.tv_error)
+        btnReintentar = findViewById(R.id.btn_reintentar)
+        pbCargando = findViewById(R.id.pb_cargando)
 
-        findViewById<MaterialButton>(R.id.btn_reintentar).setOnClickListener {
+        btnReintentar.setOnClickListener {
             viewModel.cargar()
         }
 
@@ -52,40 +61,34 @@ class FeedActivity : AppCompatActivity() {
     }
 
     private fun renderizar(estado: FeedUiState) {
-        val rv = findViewById<RecyclerView>(R.id.rv_feed)
-        val vacio = findViewById<TextView>(R.id.tv_vacio)
-        val error = findViewById<TextView>(R.id.tv_error)
-        val btnReintentar = findViewById<MaterialButton>(R.id.btn_reintentar)
-        val cargando = findViewById<ProgressBar>(R.id.pb_cargando)
-
         when (estado) {
             FeedUiState.Cargando -> {
-                cargando.visibility = View.VISIBLE
-                rv.visibility = View.GONE
-                vacio.visibility = View.GONE
-                error.visibility = View.GONE
+                pbCargando.visibility = View.VISIBLE
+                rvFeed.visibility = View.GONE
+                tvVacio.visibility = View.GONE
+                tvError.visibility = View.GONE
                 btnReintentar.visibility = View.GONE
             }
             is FeedUiState.Exito -> {
-                cargando.visibility = View.GONE
-                error.visibility = View.GONE
+                pbCargando.visibility = View.GONE
+                tvError.visibility = View.GONE
                 btnReintentar.visibility = View.GONE
                 adapter.submitList(estado.publicaciones)
-                vacio.visibility = if (estado.publicaciones.isEmpty()) View.VISIBLE else View.GONE
-                rv.visibility = if (estado.publicaciones.isEmpty()) View.GONE else View.VISIBLE
+                tvVacio.visibility = if (estado.publicaciones.isEmpty()) View.VISIBLE else View.GONE
+                rvFeed.visibility = if (estado.publicaciones.isEmpty()) View.GONE else View.VISIBLE
             }
             FeedUiState.Error -> {
-                cargando.visibility = View.GONE
-                rv.visibility = View.GONE
-                vacio.visibility = View.GONE
-                error.visibility = View.VISIBLE
+                pbCargando.visibility = View.GONE
+                rvFeed.visibility = View.GONE
+                tvVacio.visibility = View.GONE
+                tvError.visibility = View.VISIBLE
                 btnReintentar.visibility = View.VISIBLE
             }
         }
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressedDispatcher.onBackPressed()
+        navegarAtras()
         return true
     }
 }

@@ -5,6 +5,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -120,8 +121,8 @@ class AuthRepositoryTest {
         repositorio.logout()
 
         assertFalse(repositorio.sesionActiva())
-        assertFalse(repositorio.usuarioId() != null)
-        assertFalse(repositorio.tokenAcceso() != null)
+        assertNull(repositorio.usuarioId())
+        assertNull(repositorio.tokenAcceso())
     }
 
     @Test

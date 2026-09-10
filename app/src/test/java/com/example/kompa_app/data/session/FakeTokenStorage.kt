@@ -1,10 +1,8 @@
 package com.example.kompa_app.data.session
 
-import java.util.HashMap
-
 class FakeTokenStorage : TokenStorage {
 
-    private val datos = HashMap<String, Any?>()
+    private val datos = mutableMapOf<String, Any?>()
 
     override fun guardar(usuarioId: String, accessToken: String, refreshToken: String, expiraEn: Long) {
         datos["usuarioId"] = usuarioId
