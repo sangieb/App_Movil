@@ -12,40 +12,36 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
 import com.example.kompa_app.Constantes
+import com.example.kompa_app.KompaApplication
 import com.example.kompa_app.R
 import com.example.kompa_app.core.util.FechaFormatos
 import com.example.kompa_app.core.util.configurarToolbar
 import com.example.kompa_app.core.util.mostrarError
 import com.example.kompa_app.core.util.navegarAtras
+import com.example.kompa_app.data.CatalogosRegistro
 import com.example.kompa_app.ui.perfil.preview.PerfilPreviewActivity
 import java.util.Calendar
+import kotlinx.coroutines.launch
 
 class RegistroActivity : AppCompatActivity() {
 
     private val MAX_INTERESES = 5
 
-    private val INTERESES_DISPONIBLES = listOf(
-        "Senderismo", "Playa", "Mochilero", "Gastronomía", "Fotografía",
-        "Vida nocturna", "Museos y cultura", "Deportes extremos", "Yoga",
-        "Café y trabajo remoto", "Compras", "Naturaleza", "Fiestas locales",
-        "Buceo", "Road trips"
-    )
-
-    private val NACIONALIDADES = listOf(
-        "Mexicana/o", "Colombiana/o", "Argentina/o", "Chilena/o", "Peruana/o",
-        "Española/o", "Estadounidense", "Brasileña/o", "Ecuatoriana/o", "Otro/Otra"
-    )
-
-    private val IDIOMAS = listOf(
-        "Español", "Inglés", "Portugués", "Francés", "Alemán", "Italiano", "Otro"
-    )
+    private val graph by lazy { (application as KompaApplication).graph }
+    private val viewModel: RegistroViewModel by viewModels {
+        RegistroViewModelFactory(graph.catalogoRepository)
+    }
 
     private var fotoUri: Uri? = null
     private val interesesSeleccionados = mutableSetOf<String>()
@@ -69,11 +65,9 @@ class RegistroActivity : AppCompatActivity() {
         setupToolbar()
         setupFoto()
         setupFechaNacimiento()
-        setupNacionalidad()
-        setupIdiomas()
         setupConectarChips()
-        setupIntereses()
         setupBotonRegistrar()
+        observarCatalogos()
     }
 
     private fun setupToolbar() {
@@ -108,15 +102,25 @@ class RegistroActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupNacionalidad() {
+    private fun setupNacionalidad(catalogos: CatalogosRegistro) {
+        if (catalogos.nacionalidades.isEmpty()) return
         val actvNacionalidad = findViewById<AutoCompleteTextView>(R.id.actv_nacionalidad)
-        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, NACIONALIDADES)
+        val adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_dropdown_item_1line,
+            catalogos.nacionalidades
+        )
         actvNacionalidad.setAdapter(adapter)
     }
 
-    private fun setupIdiomas() {
+    private fun setupIdiomas(catalogos: CatalogosRegistro) {
+        if (catalogos.idiomas.isEmpty()) return
         val actvIdiomas = findViewById<AutoCompleteTextView>(R.id.actv_idiomas)
-        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, IDIOMAS)
+        val adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_dropdown_item_1line,
+            catalogos.idiomas
+        )
         actvIdiomas.setAdapter(adapter)
     }
 
@@ -138,48 +142,83 @@ class RegistroActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupIntereses() {
+    private fun setupIntereses(catalogos: CatalogosRegistro) {
+        if (catalogos.intereses.isEmpty()) return
         val cgIntereses = findViewById<ChipGroup>(R.id.cg_intereses)
-        val tvContadorIntereses = findViewById<android.widget.TextView>(R.id.tv_contador_intereses)
+        cgIntereses.removeAllViews()
 
-        INTERESES_DISPONIBLES.forEach { interes ->
-            val chipInteres = Chip(this).apply {
-                text = interes
-                isCheckable = true
-                setChipBackgroundColorResource(R.color.purple_ultra_light)
-                setChipStrokeColorResource(R.color.purple_medium)
-                chipStrokeWidth = 1f
+        catalogos.intereses.forEach { interes ->
+            val chipInteres = crearChipInteres(interes)
+            if (interesesSeleccionados.contains(interes)) {
+                chipInteres.isChecked = true
             }
-
-            chipInteres.setOnCheckedChangeListener { buttonView, isChecked ->
-                val chip = buttonView as Chip
-                if (isChecked) {
-                    if (interesesSeleccionados.size >= MAX_INTERESES) {
-                        chip.isChecked = false
-                        Toast.makeText(
-                            this,
-                            resources.getQuantityString(R.plurals.error_max_intereses, MAX_INTERESES, MAX_INTERESES),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        return@setOnCheckedChangeListener
-                    }
-                    interesesSeleccionados.add(interes)
-                    chip.setChipBackgroundColorResource(R.color.purple_primary)
-                    chip.setTextColor(ContextCompat.getColor(this, R.color.white))
-                } else {
-                    interesesSeleccionados.remove(interes)
-                    chip.setChipBackgroundColorResource(R.color.purple_ultra_light)
-                    chip.setTextColor(ContextCompat.getColor(this, R.color.text_dark))
-                }
-                tvContadorIntereses.text = getString(
-                    R.string.main_contador_intereses_formato,
-                    MAX_INTERESES,
-                    interesesSeleccionados.size,
-                    MAX_INTERESES
-                )
-            }
-
             cgIntereses.addView(chipInteres)
+        }
+        actualizarContadorIntereses()
+    }
+
+    private fun crearChipInteres(interes: String): Chip = Chip(this).apply {
+        text = interes
+        isCheckable = true
+        setChipBackgroundColorResource(R.color.purple_ultra_light)
+        setChipStrokeColorResource(R.color.purple_medium)
+        chipStrokeWidth = 1f
+
+        setOnCheckedChangeListener { buttonView, isChecked ->
+            val chip = buttonView as Chip
+            if (isChecked) {
+                if (interesesSeleccionados.size >= MAX_INTERESES) {
+                    chip.isChecked = false
+                    Toast.makeText(
+                        this@RegistroActivity,
+                        resources.getQuantityString(
+                            R.plurals.error_max_intereses,
+                            MAX_INTERESES,
+                            MAX_INTERESES
+                        ),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@setOnCheckedChangeListener
+                }
+                interesesSeleccionados.add(interes)
+                chip.setChipBackgroundColorResource(R.color.purple_primary)
+                chip.setTextColor(ContextCompat.getColor(this@RegistroActivity, R.color.white))
+            } else {
+                interesesSeleccionados.remove(interes)
+                chip.setChipBackgroundColorResource(R.color.purple_ultra_light)
+                chip.setTextColor(ContextCompat.getColor(this@RegistroActivity, R.color.text_dark))
+            }
+            actualizarContadorIntereses()
+        }
+    }
+
+    private fun actualizarContadorIntereses() {
+        findViewById<android.widget.TextView>(R.id.tv_contador_intereses).text = getString(
+            R.string.main_contador_intereses_formato,
+            MAX_INTERESES,
+            interesesSeleccionados.size,
+            MAX_INTERESES
+        )
+    }
+
+    private fun observarCatalogos() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.estado.collect { estado ->
+                    when (estado) {
+                        RegistroUiState.Cargando ->
+                            findViewById<MaterialButton>(R.id.btn_registrar).isEnabled = false
+                        is RegistroUiState.Listo -> {
+                            findViewById<MaterialButton>(R.id.btn_registrar).isEnabled = true
+                            setupNacionalidad(estado.catalogos)
+                            setupIdiomas(estado.catalogos)
+                            setupIntereses(estado.catalogos)
+                        }
+                        RegistroUiState.Error ->
+                            findViewById<MaterialButton>(R.id.btn_registrar).isEnabled = true
+                    }
+                }
+            }
         }
     }
 

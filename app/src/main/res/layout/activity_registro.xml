@@ -322,8 +322,8 @@
                 android:layout_marginTop="8dp"
                 app:singleSelection="false">
 
-                <!-- Los chips de interés se agregan dinámicamente desde Kotlin,
-                     ver INTERESES_DISPONIBLES en MainActivity.kt -->
+                <!-- Los chips de interés se generan dinámicamente en RegistroActivity
+                     a partir de los catálogos (API + SQLite). -->
 
             </com.google.android.material.chip.ChipGroup>
 

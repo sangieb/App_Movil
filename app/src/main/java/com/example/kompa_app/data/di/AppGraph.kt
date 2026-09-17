@@ -2,6 +2,7 @@ package com.example.kompa_app.data.di
 
 import android.content.Context
 import com.example.kompa_app.data.ActividadRepository
+import com.example.kompa_app.data.CatalogoRepository
 import com.example.kompa_app.data.PerfilRepository
 import com.example.kompa_app.data.PerfilStore
 import com.example.kompa_app.data.PublicacionRepository
@@ -32,4 +33,6 @@ class AppGraph(context: Context) {
     val publicacionRepository: PublicacionRepository by lazy { PublicacionRepository(apiClient) }
 
     val actividadRepository: ActividadRepository by lazy { ActividadRepository(dbHelper, apiClient) }
+
+    val catalogoRepository: CatalogoRepository by lazy { CatalogoRepository(dbHelper, apiClient) }
 }

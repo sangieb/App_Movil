@@ -15,3 +15,9 @@ data class PublicacionDto(
     val lat: Double? = null,
     val lon: Double? = null
 )
+
+data class CatalogoDto(
+    val tipo: String? = null,
+    val valor: String? = null,
+    val orden: Int? = null
+)

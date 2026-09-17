@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.kompa_app.data.Actividad
 import com.example.kompa_app.data.ActividadesEjemplo
+import com.example.kompa_app.data.CatalogosSemilla
 import com.example.kompa_app.data.cuenta.Cuenta
+import com.example.kompa_app.data.network.CatalogoDto
 
 class KompaDbHelper(context: Context) : SQLiteOpenHelper(
     context,
@@ -19,12 +21,18 @@ class KompaDbHelper(context: Context) : SQLiteOpenHelper(
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(DDL_ACTIVIDADES)
         db.execSQL(DDL_CUENTAS)
+        db.execSQL(DDL_CATALOGOS)
         insertarActividades(db, ActividadesEjemplo.lista())
+        reemplazarCatalogos(db, CatalogosSemilla.lista())
     }
 
     override fun onUpgrade(db: SQLiteDatabase, versionAntigua: Int, versionNueva: Int) {
         if (versionAntigua < 2) {
             db.execSQL(DDL_CUENTAS)
+        }
+        if (versionAntigua < 3) {
+            db.execSQL(DDL_CATALOGOS)
+            reemplazarCatalogos(db, CatalogosSemilla.lista())
         }
     }
 
@@ -63,6 +71,51 @@ class KompaDbHelper(context: Context) : SQLiteOpenHelper(
         synchronized(this) {
             writableDatabase.insertWithOnConflict(TABLA_ACTIVIDADES, null, actividad.aContentValues(),
                 SQLiteDatabase.CONFLICT_REPLACE)
+        }
+    }
+
+    fun consultarCatalogos(tipo: String): List<String> =
+        readableDatabase.query(
+            TABLA_CATALOGOS,
+            arrayOf(COL_VALOR),
+            "$COL_TIPO = ?",
+            arrayOf(tipo),
+            null,
+            null,
+            "$COL_ORDEN ASC"
+        ).use { cursor ->
+            val resultado = ArrayList<String>(cursor.count)
+            while (cursor.moveToNext()) {
+                resultado.add(cursor.getString(cursor.getColumnIndexOrThrow(COL_VALOR)))
+            }
+            resultado
+        }
+
+    fun reemplazarCatalogos(catalogos: List<CatalogoDto>) {
+        synchronized(this) {
+            reemplazarCatalogos(writableDatabase, catalogos)
+        }
+    }
+
+    private fun reemplazarCatalogos(db: SQLiteDatabase, catalogos: List<CatalogoDto>) {
+        db.beginTransaction()
+        try {
+            db.delete(TABLA_CATALOGOS, null, null)
+            catalogos.forEach { catalogo ->
+                db.insertWithOnConflict(
+                    TABLA_CATALOGOS,
+                    null,
+                    ContentValues().apply {
+                        put(COL_TIPO, catalogo.tipo)
+                        put(COL_VALOR, catalogo.valor)
+                        catalogo.orden?.let { put(COL_ORDEN, it) }
+                    },
+                    SQLiteDatabase.CONFLICT_REPLACE
+                )
+            }
+            db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
         }
     }
 
@@ -168,10 +221,11 @@ class KompaDbHelper(context: Context) : SQLiteOpenHelper(
 
     private companion object {
         const val NOMBRE_DB = "kompa.db"
-        const val VERSION_DB = 2
+        const val VERSION_DB = 3
 
         const val TABLA_ACTIVIDADES = "actividades"
         const val TABLA_CUENTAS = "cuentas"
+        const val TABLA_CATALOGOS = "catalogos"
 
         const val COL_ID = "id"
         const val COL_NOMBRE = "nombre"
@@ -188,6 +242,9 @@ class KompaDbHelper(context: Context) : SQLiteOpenHelper(
         const val COL_CORREO = "correo"
         const val COL_SAL = "sal"
         const val COL_HASH = "hash"
+        const val COL_TIPO = "tipo"
+        const val COL_VALOR = "valor"
+        const val COL_ORDEN = "orden"
 
         val DDL_ACTIVIDADES = """
             CREATE TABLE $TABLA_ACTIVIDADES (
@@ -211,6 +268,15 @@ class KompaDbHelper(context: Context) : SQLiteOpenHelper(
                 $COL_CORREO TEXT PRIMARY KEY,
                 $COL_SAL TEXT NOT NULL,
                 $COL_HASH TEXT NOT NULL
+            )
+        """.trimIndent()
+
+        val DDL_CATALOGOS = """
+            CREATE TABLE IF NOT EXISTS $TABLA_CATALOGOS (
+                $COL_TIPO TEXT NOT NULL,
+                $COL_VALOR TEXT NOT NULL,
+                $COL_ORDEN INTEGER NOT NULL DEFAULT 0,
+                PRIMARY KEY ($COL_TIPO, $COL_VALOR)
             )
         """.trimIndent()
     }

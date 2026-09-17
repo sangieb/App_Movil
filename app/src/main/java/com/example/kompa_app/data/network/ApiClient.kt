@@ -41,6 +41,15 @@ class ApiClient(
             .create(PublicacionApi::class.java)
     }
 
+    val catalogoApi: CatalogoApi by lazy {
+        Retrofit.Builder()
+            .baseUrl(Constantes.API_BASE_URL)
+            .client(cliente(lecturaSegundos = 20, autenticado = false))
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(CatalogoApi::class.java)
+    }
+
     private fun cliente(lecturaSegundos: Long, autenticado: Boolean): OkHttpClient {
         val builder = OkHttpClient.Builder()
             .addInterceptor { cadena ->

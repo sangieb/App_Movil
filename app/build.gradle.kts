@@ -50,4 +50,5 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
 }

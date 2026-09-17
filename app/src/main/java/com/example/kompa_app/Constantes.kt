@@ -40,6 +40,11 @@ object Constantes {
     const val ORIGEN_LOCAL = "local"
     const val ORIGEN_API = "api"
 
+    // Catálogos de registro.
+    const val TIPO_NACIONALIDAD = "nacionalidad"
+    const val TIPO_IDIOMA = "idioma"
+    const val TIPO_INTERES = "interes"
+
     // API propia (endpoint del feed). Ajustar a la URL real del backend.
     const val API_BASE_URL = "https://api.kompa.example/"
 
