@@ -3,8 +3,8 @@ package com.example.kompa_app.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.kompa_app.data.Actividad
-import com.example.kompa_app.data.ActividadRepository
+import com.example.kompa_app.data.actividad.Actividad
+import com.example.kompa_app.data.actividad.ActividadRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

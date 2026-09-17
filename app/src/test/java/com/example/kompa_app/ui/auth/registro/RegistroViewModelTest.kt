@@ -1,7 +1,7 @@
 package com.example.kompa_app.ui.auth.registro
 
-import com.example.kompa_app.data.CatalogosRegistro
-import com.example.kompa_app.data.CatalogoSource
+import com.example.kompa_app.data.catalogo.CatalogosRegistro
+import com.example.kompa_app.data.catalogo.CatalogoSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch

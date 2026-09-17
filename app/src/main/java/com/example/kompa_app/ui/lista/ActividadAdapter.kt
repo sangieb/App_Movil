@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kompa_app.R
 import com.example.kompa_app.core.util.FechaFormatos
-import com.example.kompa_app.data.Actividad
+import com.example.kompa_app.data.actividad.Actividad
 import java.io.File
 
 class ActividadAdapter :

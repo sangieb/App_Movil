@@ -104,6 +104,10 @@
     <string name="feed_error">No pudimos cargar las publicaciones</string>
     <string name="feed_reintentar">Reintentar</string>
 
+    <!-- Activity proximamente -->
+    <string name="proximamente_titulo">Próximamente</string>
+    <string name="proximamente_mensaje">Esta sección estará disponible próximamente.</string>
+
     <!-- Activity nueva actividad -->
     <string name="nueva_titulo">Nueva actividad</string>
     <string name="nueva_hint_nombre">Nombre de la actividad</string>

@@ -15,10 +15,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
-import com.example.kompa_app.Constantes
 import com.example.kompa_app.KompaApplication
 import com.example.kompa_app.R
-import com.example.kompa_app.data.Actividad
+import com.example.kompa_app.core.util.ConfigMapa
 import com.example.kompa_app.core.util.FotoUtil
 import com.example.kompa_app.core.util.FechaFormatos
 import com.example.kompa_app.core.util.FuenteDeMapa
@@ -27,6 +26,9 @@ import com.example.kompa_app.core.util.UbicacionHelper
 import com.example.kompa_app.core.util.configurarToolbar
 import com.example.kompa_app.core.util.mostrarError
 import com.example.kompa_app.core.util.navegarAtras
+import com.example.kompa_app.data.actividad.Actividad
+import com.example.kompa_app.data.actividad.ActividadOrigenes
+import com.example.kompa_app.data.network.NetworkConfig
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -73,8 +75,8 @@ class NuevaActividadActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Configuration.getInstance().load(this, getSharedPreferences(Constantes.PREF_OSMDROID, MODE_PRIVATE))
-        Configuration.getInstance().userAgentValue = Constantes.USER_AGENT
+        Configuration.getInstance().load(this, getSharedPreferences(ConfigMapa.PREF_OSMDROID, MODE_PRIVATE))
+        Configuration.getInstance().userAgentValue = NetworkConfig.USER_AGENT
         setContentView(R.layout.activity_nueva_actividad)
 
         configurarToolbar()
@@ -164,7 +166,7 @@ etUbicacion = findViewById(R.id.et_ubicacion)
         }
         mapa.setTileSource(FuenteDeMapa.PRINCIPAL)
         mapa.controller.setZoom(15.0)
-        mapa.controller.setCenter(GeoPoint(Constantes.LAT_DEFAULT, Constantes.LON_DEFAULT))
+        mapa.controller.setCenter(GeoPoint(ConfigMapa.LAT_DEFAULT, ConfigMapa.LON_DEFAULT))
 
         val receptor = object : MapEventsReceiver {
             override fun singleTapConfirmedHelper(p: GeoPoint?): Boolean {
@@ -372,7 +374,7 @@ etUbicacion = findViewById(R.id.et_ubicacion)
                 fechaCreacionLong = System.currentTimeMillis(),
                 fechaActividadLong = fechaActividad,
                 fotoRuta = rutaFoto,
-                origen = Constantes.ORIGEN_LOCAL
+                origen = ActividadOrigenes.LOCAL
             )
             withContext(Dispatchers.IO) {
                 graph.actividadRepository.guardarNueva(actividad)

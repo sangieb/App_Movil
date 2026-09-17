@@ -9,11 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import com.example.kompa_app.Constantes
 import com.example.kompa_app.R
 import com.example.kompa_app.core.util.configurarToolbar
 import com.example.kompa_app.core.util.navegarAtras
-import com.example.kompa_app.data.Perfil
+import com.example.kompa_app.data.perfil.Perfil
 import com.example.kompa_app.ui.perfil.confirmacion.ConfirmacionActivity
 
 class PerfilPreviewActivity : AppCompatActivity() {
@@ -29,7 +28,7 @@ class PerfilPreviewActivity : AppCompatActivity() {
     }
 
     private fun mostrarDatosRecibidos() {
-        val bundle = intent.getBundleExtra(Constantes.BUNDLE_DATOS) ?: return
+        val bundle = intent.getBundleExtra(Perfil.BUNDLE_DATOS) ?: return
         val perfil = Perfil.deBundle(bundle)
 
         findViewById<TextView>(R.id.tv_nombre_preview).text = perfil.nombre
@@ -80,10 +79,10 @@ class PerfilPreviewActivity : AppCompatActivity() {
         }
 
         findViewById<MaterialButton>(R.id.btn_confirmar_perfil).setOnClickListener {
-            val datos = intent.getBundleExtra(Constantes.BUNDLE_DATOS) ?: Bundle()
+            val datos = intent.getBundleExtra(Perfil.BUNDLE_DATOS) ?: Bundle()
             startActivity(
                 Intent(this, ConfirmacionActivity::class.java)
-                    .putExtra(Constantes.BUNDLE_DATOS, datos)
+                    .putExtra(Perfil.BUNDLE_DATOS, datos)
             )
         }
     }

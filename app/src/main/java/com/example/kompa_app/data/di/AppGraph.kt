@@ -1,16 +1,16 @@
 package com.example.kompa_app.data.di
 
 import android.content.Context
-import com.example.kompa_app.data.ActividadRepository
-import com.example.kompa_app.data.CatalogoRepository
-import com.example.kompa_app.data.PerfilRepository
-import com.example.kompa_app.data.PerfilStore
-import com.example.kompa_app.data.PublicacionRepository
-import com.example.kompa_app.data.cuenta.CuentaStore
+import com.example.kompa_app.data.actividad.ActividadRepository
+import com.example.kompa_app.data.auth.cuenta.CuentaStore
+import com.example.kompa_app.data.auth.session.AuthRepository
+import com.example.kompa_app.data.auth.session.TokenStore
+import com.example.kompa_app.data.catalogo.CatalogoRepository
 import com.example.kompa_app.data.db.KompaDbHelper
 import com.example.kompa_app.data.network.ApiClient
-import com.example.kompa_app.data.session.AuthRepository
-import com.example.kompa_app.data.session.TokenStore
+import com.example.kompa_app.data.perfil.PerfilRepository
+import com.example.kompa_app.data.perfil.PerfilStore
+import com.example.kompa_app.data.publicacion.PublicacionRepository
 
 class AppGraph(context: Context) {
 
@@ -30,7 +30,9 @@ class AppGraph(context: Context) {
 
     val apiClient: ApiClient by lazy { ApiClient(authRepository) }
 
-    val publicacionRepository: PublicacionRepository by lazy { PublicacionRepository(apiClient) }
+    val publicacionRepository: PublicacionRepository by lazy {
+        PublicacionRepository(dbHelper, apiClient)
+    }
 
     val actividadRepository: ActividadRepository by lazy { ActividadRepository(dbHelper, apiClient) }
 

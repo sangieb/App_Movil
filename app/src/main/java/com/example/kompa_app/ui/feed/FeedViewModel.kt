@@ -3,9 +3,10 @@ package com.example.kompa_app.ui.feed
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.kompa_app.data.Publicacion
-import com.example.kompa_app.data.PublicacionRepository
+import com.example.kompa_app.data.publicacion.Publicacion
+import com.example.kompa_app.data.publicacion.PublicacionSource
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,29 +20,35 @@ sealed interface FeedUiState {
 }
 
 class FeedViewModel(
-    private val repositorio: PublicacionRepository
+    private val repositorio: PublicacionSource,
+    private val dispatcherIO: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
 
     private val _estado = MutableStateFlow<FeedUiState>(FeedUiState.Cargando)
     val estado: StateFlow<FeedUiState> = _estado
 
+    init {
+        cargar()
+    }
+
     fun cargar() {
         viewModelScope.launch {
-            _estado.value = FeedUiState.Cargando
-            _estado.value = try {
-                val publicaciones = withContext(Dispatchers.IO) { repositorio.obtener() }
-                FeedUiState.Exito(publicaciones)
+            val locales = withContext(dispatcherIO) { repositorio.publicacionesLocales() }
+            _estado.value = FeedUiState.Exito(locales)
+            try {
+                val actualizadas = withContext(dispatcherIO) { repositorio.refrescar() }
+                _estado.value = FeedUiState.Exito(actualizadas)
             } catch (e: CancellationException) {
                 throw e
             } catch (_: Exception) {
-                FeedUiState.Error
+                _estado.value = FeedUiState.Error
             }
         }
     }
 }
 
 class FeedViewModelFactory(
-    private val repositorio: PublicacionRepository
+    private val repositorio: PublicacionSource
 ) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")

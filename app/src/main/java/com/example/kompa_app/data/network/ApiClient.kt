@@ -1,10 +1,9 @@
 package com.example.kompa_app.data.network
 
 import com.example.kompa_app.BuildConfig
-import com.example.kompa_app.Constantes
-import com.example.kompa_app.data.session.AuthInterceptor
-import com.example.kompa_app.data.session.AuthRepository
-import com.example.kompa_app.data.session.TokenAuthenticator
+import com.example.kompa_app.data.auth.session.AuthInterceptor
+import com.example.kompa_app.data.auth.session.AuthRepository
+import com.example.kompa_app.data.auth.session.TokenAuthenticator
 import java.util.concurrent.TimeUnit
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -34,16 +33,25 @@ class ApiClient(
 
     val publicacionApi: PublicacionApi by lazy {
         Retrofit.Builder()
-            .baseUrl(Constantes.API_BASE_URL)
+            .baseUrl(NetworkConfig.API_BASE_URL)
             .client(cliente(lecturaSegundos = 20, autenticado = true))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(PublicacionApi::class.java)
     }
 
+    val actividadApi: ActividadApi by lazy {
+        Retrofit.Builder()
+            .baseUrl(NetworkConfig.API_BASE_URL)
+            .client(cliente(lecturaSegundos = 20, autenticado = true))
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ActividadApi::class.java)
+    }
+
     val catalogoApi: CatalogoApi by lazy {
         Retrofit.Builder()
-            .baseUrl(Constantes.API_BASE_URL)
+            .baseUrl(NetworkConfig.API_BASE_URL)
             .client(cliente(lecturaSegundos = 20, autenticado = false))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -54,7 +62,7 @@ class ApiClient(
         val builder = OkHttpClient.Builder()
             .addInterceptor { cadena ->
                 val request = cadena.request().newBuilder()
-                    .header("User-Agent", Constantes.USER_AGENT)
+                    .header("User-Agent", NetworkConfig.USER_AGENT)
                     .build()
                 cadena.proceed(request)
             }

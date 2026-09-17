@@ -5,12 +5,11 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.kompa_app.Constantes
 import com.example.kompa_app.KompaApplication
 import com.example.kompa_app.R
 import com.example.kompa_app.core.util.configurarToolbar
 import com.example.kompa_app.core.util.navegarAtras
-import com.example.kompa_app.data.Perfil
+import com.example.kompa_app.data.perfil.Perfil
 import com.example.kompa_app.ui.home.HomeActivity
 import com.example.kompa_app.ui.widget.animacion.AirplaneAnimationView
 import com.google.android.material.button.MaterialButton
@@ -44,9 +43,9 @@ class ConfirmacionActivity : AppCompatActivity() {
         }
 
         btnContinuar.setOnClickListener {
-            val bundle = intent.getBundleExtra(Constantes.BUNDLE_DATOS)
-            val correo = bundle?.getString(Constantes.EXTRA_CORREO).orEmpty()
-            val password = bundle?.getString(Constantes.EXTRA_PASSWORD)
+            val bundle = intent.getBundleExtra(Perfil.BUNDLE_DATOS)
+            val correo = bundle?.getString(Perfil.EXTRA_CORREO).orEmpty()
+            val password = bundle?.getString(Perfil.EXTRA_PASSWORD)
             if (correo.isNotBlank() && password != null) {
                 graph.cuentaStore.registrar(correo, password)
                 graph.authRepository.crearSesion(correo)
@@ -65,7 +64,7 @@ class ConfirmacionActivity : AppCompatActivity() {
     }
 
     private fun persistirPerfil() {
-        val bundle = intent.getBundleExtra(Constantes.BUNDLE_DATOS) ?: return
+        val bundle = intent.getBundleExtra(Perfil.BUNDLE_DATOS) ?: return
         graph.perfilRepository.guardar(Perfil.deBundle(bundle))
     }
 }

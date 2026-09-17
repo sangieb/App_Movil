@@ -56,8 +56,6 @@ class FeedActivity : AppCompatActivity() {
                 viewModel.estado.collect { estado -> renderizar(estado) }
             }
         }
-
-        viewModel.cargar()
     }
 
     private fun renderizar(estado: FeedUiState) {

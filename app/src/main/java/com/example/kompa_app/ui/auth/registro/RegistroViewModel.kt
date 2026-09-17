@@ -3,9 +3,9 @@ package com.example.kompa_app.ui.auth.registro
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.kompa_app.data.CatalogosRegistro
-import com.example.kompa_app.data.CatalogoRepository
-import com.example.kompa_app.data.CatalogoSource
+import com.example.kompa_app.data.catalogo.CatalogosRegistro
+import com.example.kompa_app.data.catalogo.CatalogoRepository
+import com.example.kompa_app.data.catalogo.CatalogoSource
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

@@ -22,14 +22,15 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
-import com.example.kompa_app.Constantes
 import com.example.kompa_app.KompaApplication
 import com.example.kompa_app.R
 import com.example.kompa_app.core.util.FechaFormatos
 import com.example.kompa_app.core.util.configurarToolbar
 import com.example.kompa_app.core.util.mostrarError
 import com.example.kompa_app.core.util.navegarAtras
-import com.example.kompa_app.data.CatalogosRegistro
+import com.example.kompa_app.data.auth.AuthConfig
+import com.example.kompa_app.data.catalogo.CatalogosRegistro
+import com.example.kompa_app.data.perfil.Perfil
 import com.example.kompa_app.ui.perfil.preview.PerfilPreviewActivity
 import java.util.Calendar
 import kotlinx.coroutines.launch
@@ -167,7 +168,9 @@ class RegistroActivity : AppCompatActivity() {
         setOnCheckedChangeListener { buttonView, isChecked ->
             val chip = buttonView as Chip
             if (isChecked) {
-                if (interesesSeleccionados.size >= MAX_INTERESES) {
+                if (interes !in interesesSeleccionados &&
+                    interesesSeleccionados.size >= MAX_INTERESES
+                ) {
                     chip.isChecked = false
                     Toast.makeText(
                         this@RegistroActivity,
@@ -250,21 +253,21 @@ class RegistroActivity : AppCompatActivity() {
         val intereses = interesesSeleccionados.joinToString(", ")
 
         val bundle = Bundle().apply {
-            putString(Constantes.EXTRA_NOMBRE, nombre)
-            putString(Constantes.EXTRA_CORREO, correo)
-            putString(Constantes.EXTRA_PASSWORD,
+            putString(Perfil.EXTRA_NOMBRE, nombre)
+            putString(Perfil.EXTRA_CORREO, correo)
+            putString(Perfil.EXTRA_PASSWORD,
                 findViewById<TextInputEditText>(R.id.et_password).text.toString())
-            putString(Constantes.EXTRA_FECHA_NACIMIENTO, fecha)
-            putString(Constantes.EXTRA_NACIONALIDAD, nacionalidad)
-            putString(Constantes.EXTRA_GENERO, generoSeleccionado)
-            putString(Constantes.EXTRA_CONECTAR, conectarSeleccionado)
-            putString(Constantes.EXTRA_IDIOMAS, idiomas)
-            putString(Constantes.EXTRA_INTERESES, intereses)
-            putString(Constantes.EXTRA_FOTO_URI, fotoUri?.toString())
+            putString(Perfil.EXTRA_FECHA_NACIMIENTO, fecha)
+            putString(Perfil.EXTRA_NACIONALIDAD, nacionalidad)
+            putString(Perfil.EXTRA_GENERO, generoSeleccionado)
+            putString(Perfil.EXTRA_CONECTAR, conectarSeleccionado)
+            putString(Perfil.EXTRA_IDIOMAS, idiomas)
+            putString(Perfil.EXTRA_INTERESES, intereses)
+            putString(Perfil.EXTRA_FOTO_URI, fotoUri?.toString())
         }
 
         val intent = Intent(this, PerfilPreviewActivity::class.java).apply {
-            putExtra(Constantes.BUNDLE_DATOS, bundle)
+            putExtra(Perfil.BUNDLE_DATOS, bundle)
         }
         startActivity(intent)
     }
@@ -285,7 +288,7 @@ class RegistroActivity : AppCompatActivity() {
             nombre.length < 2 -> mostrarError(getString(R.string.error_nombre_corto))
             correo.isBlank() -> mostrarError(getString(R.string.error_correo))
             !Patterns.EMAIL_ADDRESS.matcher(correo).matches() -> mostrarError(getString(R.string.error_correo_invalido))
-            password.length < Constantes.MIN_PASSWORD_LEN -> mostrarError(getString(R.string.error_password))
+            password.length < AuthConfig.MIN_PASSWORD_LEN -> mostrarError(getString(R.string.error_password))
             fecha.isBlank() -> mostrarError(getString(R.string.error_fecha))
             !esMayorDeEdad(fecha) -> mostrarError(getString(R.string.error_mayor_edad))
             nacionalidad.isBlank() -> mostrarError(getString(R.string.error_nacionalidad))
@@ -317,8 +320,28 @@ class RegistroActivity : AppCompatActivity() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putStringArrayList(
+            ESTADO_INTERESES_SELECCIONADOS,
+            ArrayList(interesesSeleccionados)
+        )
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        interesesSeleccionados.clear()
+        savedInstanceState.getStringArrayList(ESTADO_INTERESES_SELECCIONADOS)?.let {
+            interesesSeleccionados.addAll(it)
+        }
+    }
+
     override fun onSupportNavigateUp(): Boolean {
         navegarAtras()
         return true
+    }
+
+    companion object {
+        private const val ESTADO_INTERESES_SELECCIONADOS = "intereses_seleccionados"
     }
 }

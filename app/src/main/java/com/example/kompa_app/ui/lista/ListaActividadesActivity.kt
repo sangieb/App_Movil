@@ -11,20 +11,20 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.kompa_app.Constantes
 import com.example.kompa_app.KompaApplication
 import com.example.kompa_app.R
 import com.example.kompa_app.core.util.configurarToolbar
 import com.example.kompa_app.core.util.navegarAtras
-import com.example.kompa_app.data.Actividad
+import com.example.kompa_app.data.actividad.Actividad
+import com.example.kompa_app.data.actividad.ActividadOrigenes
 import com.google.android.material.chip.ChipGroup
 import kotlinx.coroutines.launch
 
 class ListaActividadesActivity : AppCompatActivity() {
 
     private val graph by lazy { (application as KompaApplication).graph }
-    private val viewModel: CatalogViewModel by viewModels {
-        CatalogViewModelFactory(graph.actividadRepository)
+    private val viewModel: ListaActividadesViewModel by viewModels {
+        ListaActividadesViewModelFactory(graph.actividadRepository)
     }
     private val adapter = ActividadAdapter()
 
@@ -70,14 +70,16 @@ class ListaActividadesActivity : AppCompatActivity() {
                 }
             }
         }
+
+        viewModel.sincronizar()
     }
 
     private fun aplicarFiltros() {
         val texto = findViewById<SearchView>(R.id.sv_buscar).query?.toString()?.trim().orEmpty()
 
         val origen = when (findViewById<ChipGroup>(R.id.cg_origen).checkedChipId) {
-            R.id.chip_origen_locales -> Constantes.ORIGEN_LOCAL
-            R.id.chip_origen_api -> Constantes.ORIGEN_API
+            R.id.chip_origen_locales -> ActividadOrigenes.LOCAL
+            R.id.chip_origen_api -> ActividadOrigenes.API
             else -> null
         }
 

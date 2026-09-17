@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kompa_app.R
 import com.example.kompa_app.core.util.FechaFormatos
-import com.example.kompa_app.data.Publicacion
+import com.example.kompa_app.data.publicacion.Publicacion
 
 class FeedAdapter :
     ListAdapter<Publicacion, FeedAdapter.PublicacionViewHolder>(DiffPublicacion) {

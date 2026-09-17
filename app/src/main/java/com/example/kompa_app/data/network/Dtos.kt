@@ -21,3 +21,16 @@ data class CatalogoDto(
     val valor: String? = null,
     val orden: Int? = null
 )
+
+data class ActividadDto(
+    val id: String? = null,
+    val nombre: String? = null,
+    val descripcion: String? = null,
+    val ubicacion: String? = null,
+    val lat: Double? = null,
+    val lon: Double? = null,
+    val creadoPor: String? = null,
+    val duracionMin: Int? = null,
+    val fechaCreacionLong: Long? = null,
+    val fechaActividadLong: Long? = null
+)

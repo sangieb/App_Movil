@@ -11,7 +11,7 @@ import com.example.kompa_app.R
 import com.example.kompa_app.core.util.configurarToolbar
 import com.example.kompa_app.core.util.mostrarError
 import com.example.kompa_app.core.util.navegarAtras
-import com.example.kompa_app.data.session.ResultadoLogin
+import com.example.kompa_app.data.auth.session.ResultadoLogin
 import com.example.kompa_app.ui.auth.recuperar.RecuperarContrasenaActivity
 import com.example.kompa_app.ui.home.HomeActivity
 import com.google.android.material.button.MaterialButton

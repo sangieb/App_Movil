@@ -5,10 +5,11 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import com.example.kompa_app.data.Actividad
-import com.example.kompa_app.data.ActividadesEjemplo
-import com.example.kompa_app.data.CatalogosSemilla
-import com.example.kompa_app.data.cuenta.Cuenta
+import com.example.kompa_app.data.actividad.Actividad
+import com.example.kompa_app.data.actividad.ActividadesEjemplo
+import com.example.kompa_app.data.catalogo.CatalogosSemilla
+import com.example.kompa_app.data.publicacion.Publicacion
+import com.example.kompa_app.data.auth.cuenta.Cuenta
 import com.example.kompa_app.data.network.CatalogoDto
 
 class KompaDbHelper(context: Context) : SQLiteOpenHelper(
@@ -22,6 +23,7 @@ class KompaDbHelper(context: Context) : SQLiteOpenHelper(
         db.execSQL(DDL_ACTIVIDADES)
         db.execSQL(DDL_CUENTAS)
         db.execSQL(DDL_CATALOGOS)
+        db.execSQL(DDL_PUBLICACIONES)
         insertarActividades(db, ActividadesEjemplo.lista())
         reemplazarCatalogos(db, CatalogosSemilla.lista())
     }
@@ -33,6 +35,9 @@ class KompaDbHelper(context: Context) : SQLiteOpenHelper(
         if (versionAntigua < 3) {
             db.execSQL(DDL_CATALOGOS)
             reemplazarCatalogos(db, CatalogosSemilla.lista())
+        }
+        if (versionAntigua < 4) {
+            db.execSQL(DDL_PUBLICACIONES)
         }
     }
 
@@ -159,6 +164,42 @@ class KompaDbHelper(context: Context) : SQLiteOpenHelper(
         ).use { cursor -> cursor.aListaActividades() }
     }
 
+    fun sincronizarActividades(actividades: List<Actividad>) {
+        synchronized(this) {
+            insertarActividades(writableDatabase, actividades)
+        }
+    }
+
+    fun consultarPublicaciones(): List<Publicacion> =
+        readableDatabase.query(
+            TABLA_PUBLICACIONES,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "$COL_FECHA_CREACION DESC, $COL_TITULO ASC"
+        ).use { cursor -> cursor.aListaPublicaciones() }
+
+    fun sincronizarPublicaciones(publicaciones: List<Publicacion>) {
+        synchronized(this) {
+            writableDatabase.beginTransaction()
+            try {
+                publicaciones.forEach { publicacion ->
+                    writableDatabase.insertWithOnConflict(
+                        TABLA_PUBLICACIONES,
+                        null,
+                        publicacion.aContentValues(),
+                        SQLiteDatabase.CONFLICT_REPLACE
+                    )
+                }
+                writableDatabase.setTransactionSuccessful()
+            } finally {
+                writableDatabase.endTransaction()
+            }
+        }
+    }
+
     private fun Actividad.aContentValues(): ContentValues = ContentValues().apply {
         put(COL_ID, id)
         put(COL_NOMBRE, nombre)
@@ -197,6 +238,34 @@ class KompaDbHelper(context: Context) : SQLiteOpenHelper(
         return resultado
     }
 
+    private fun Publicacion.aContentValues(): ContentValues = ContentValues().apply {
+        put(COL_ID, id)
+        put(COL_TITULO, titulo)
+        put(COL_CUERPO, cuerpo)
+        put(COL_AUTOR, autor)
+        fechaCreacionLong?.let { put(COL_FECHA_CREACION, it) }
+        lat?.let { put(COL_LAT, it) }
+        lon?.let { put(COL_LON, it) }
+    }
+
+    private fun Cursor.aListaPublicaciones(): List<Publicacion> {
+        val resultado = ArrayList<Publicacion>(count)
+        while (moveToNext()) {
+            resultado.add(
+                Publicacion(
+                    id = getString(getColumnIndexOrThrow(COL_ID)),
+                    titulo = getString(getColumnIndexOrThrow(COL_TITULO)),
+                    cuerpo = getString(getColumnIndexOrThrow(COL_CUERPO)),
+                    autor = getString(getColumnIndexOrThrow(COL_AUTOR)),
+                    fechaCreacionLong = leerLong(COL_FECHA_CREACION),
+                    lat = leerReal(COL_LAT),
+                    lon = leerReal(COL_LON)
+                )
+            )
+        }
+        return resultado
+    }
+
     private fun Cursor.leerTexto(columna: String): String? =
         if (isNull(getColumnIndexOrThrow(columna))) null else getString(getColumnIndexOrThrow(columna))
 
@@ -205,6 +274,9 @@ class KompaDbHelper(context: Context) : SQLiteOpenHelper(
 
     private fun Cursor.leerLong(columna: String): Long? =
         if (isNull(getColumnIndexOrThrow(columna))) null else getLong(getColumnIndexOrThrow(columna))
+
+    private fun Cursor.leerReal(columna: String): Double? =
+        if (isNull(getColumnIndexOrThrow(columna))) null else getDouble(getColumnIndexOrThrow(columna))
 
     private fun insertarActividades(db: SQLiteDatabase, actividades: List<Actividad>) {
         db.beginTransaction()
@@ -221,11 +293,12 @@ class KompaDbHelper(context: Context) : SQLiteOpenHelper(
 
     private companion object {
         const val NOMBRE_DB = "kompa.db"
-        const val VERSION_DB = 3
+        const val VERSION_DB = 4
 
         const val TABLA_ACTIVIDADES = "actividades"
         const val TABLA_CUENTAS = "cuentas"
         const val TABLA_CATALOGOS = "catalogos"
+        const val TABLA_PUBLICACIONES = "publicaciones"
 
         const val COL_ID = "id"
         const val COL_NOMBRE = "nombre"
@@ -245,6 +318,9 @@ class KompaDbHelper(context: Context) : SQLiteOpenHelper(
         const val COL_TIPO = "tipo"
         const val COL_VALOR = "valor"
         const val COL_ORDEN = "orden"
+        const val COL_TITULO = "titulo"
+        const val COL_CUERPO = "cuerpo"
+        const val COL_AUTOR = "autor"
 
         val DDL_ACTIVIDADES = """
             CREATE TABLE $TABLA_ACTIVIDADES (
@@ -277,6 +353,18 @@ class KompaDbHelper(context: Context) : SQLiteOpenHelper(
                 $COL_VALOR TEXT NOT NULL,
                 $COL_ORDEN INTEGER NOT NULL DEFAULT 0,
                 PRIMARY KEY ($COL_TIPO, $COL_VALOR)
+            )
+        """.trimIndent()
+
+        val DDL_PUBLICACIONES = """
+            CREATE TABLE IF NOT EXISTS $TABLA_PUBLICACIONES (
+                $COL_ID TEXT PRIMARY KEY,
+                $COL_TITULO TEXT NOT NULL,
+                $COL_CUERPO TEXT NOT NULL,
+                $COL_AUTOR TEXT NOT NULL,
+                $COL_FECHA_CREACION INTEGER,
+                $COL_LAT REAL,
+                $COL_LON REAL
             )
         """.trimIndent()
     }

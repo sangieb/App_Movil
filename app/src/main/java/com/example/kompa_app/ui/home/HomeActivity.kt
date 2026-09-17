@@ -11,16 +11,18 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import com.example.kompa_app.Constantes
 import com.example.kompa_app.KompaApplication
 import com.example.kompa_app.R
-import com.example.kompa_app.data.Actividad
+import com.example.kompa_app.core.util.ConfigMapa
+import com.example.kompa_app.core.util.FuenteDeMapa
+import com.example.kompa_app.core.util.UbicacionHelper
+import com.example.kompa_app.data.actividad.Actividad
+import com.example.kompa_app.data.actividad.ActividadOrigenes
+import com.example.kompa_app.data.network.NetworkConfig
 import com.example.kompa_app.ui.inicio.InicioActivity
 import com.example.kompa_app.ui.lista.ListaActividadesActivity
 import com.example.kompa_app.ui.nueva.NuevaActividadActivity
-import com.example.kompa_app.ui.feed.FeedActivity
-import com.example.kompa_app.core.util.FuenteDeMapa
-import com.example.kompa_app.core.util.UbicacionHelper
+import com.example.kompa_app.ui.proximamente.ProximamenteActivity
 import kotlinx.coroutines.launch
 import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
@@ -36,8 +38,8 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private lateinit var mapa: MapView
-    private var latActual = Constantes.LAT_DEFAULT
-    private var lonActual = Constantes.LON_DEFAULT
+    private var latActual = ConfigMapa.LAT_DEFAULT
+    private var lonActual = ConfigMapa.LON_DEFAULT
 
     private val permisoUbicacion = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -52,8 +54,8 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Configuration.getInstance().load(this, getSharedPreferences(Constantes.PREF_OSMDROID, MODE_PRIVATE))
-        Configuration.getInstance().userAgentValue = Constantes.USER_AGENT
+        Configuration.getInstance().load(this, getSharedPreferences(ConfigMapa.PREF_OSMDROID, MODE_PRIVATE))
+        Configuration.getInstance().userAgentValue = NetworkConfig.USER_AGENT
         setContentView(R.layout.activity_home)
 
         mapa = MapView(this)
@@ -73,7 +75,7 @@ class HomeActivity : AppCompatActivity() {
 
         findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_show_feed)
             .setOnClickListener {
-                startActivity(Intent(this, FeedActivity::class.java))
+                startActivity(Intent(this, ProximamenteActivity::class.java))
             }
 
         findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_logout)
@@ -155,7 +157,7 @@ class HomeActivity : AppCompatActivity() {
                     setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
                     icon = ContextCompat.getDrawable(
                         this@HomeActivity,
-                        if (actividad.origen == Constantes.ORIGEN_LOCAL) R.drawable.ic_marker_local else R.drawable.ic_marker_api
+                        if (actividad.origen == ActividadOrigenes.LOCAL) R.drawable.ic_marker_local else R.drawable.ic_marker_api
                     )
                 }
                 mapa.overlays.add(marcador)
