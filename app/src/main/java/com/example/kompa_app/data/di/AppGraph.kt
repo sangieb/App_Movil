@@ -6,7 +6,7 @@ import com.example.kompa_app.data.auth.cuenta.CuentaStore
 import com.example.kompa_app.data.auth.session.AuthRepository
 import com.example.kompa_app.data.auth.session.TokenStore
 import com.example.kompa_app.data.catalogo.CatalogoRepository
-import com.example.kompa_app.data.db.KompaDbHelper
+import com.example.kompa_app.data.db.KompaDatabase
 import com.example.kompa_app.data.network.ApiClient
 import com.example.kompa_app.data.perfil.PerfilRepository
 import com.example.kompa_app.data.perfil.PerfilStore
@@ -20,9 +20,9 @@ class AppGraph(context: Context) {
 
     val perfilStore: PerfilStore by lazy { PerfilStore(appContext) }
 
-    val dbHelper: KompaDbHelper by lazy { KompaDbHelper(appContext) }
+    val database: KompaDatabase by lazy { KompaDatabase.crear(appContext) }
 
-    val cuentaStore: CuentaStore by lazy { CuentaStore(dbHelper) }
+    val cuentaStore: CuentaStore by lazy { CuentaStore(database.cuentaDao()) }
 
     val authRepository: AuthRepository by lazy { AuthRepository(tokenStore, cuentaStore) }
 
@@ -31,10 +31,10 @@ class AppGraph(context: Context) {
     val apiClient: ApiClient by lazy { ApiClient(authRepository) }
 
     val publicacionRepository: PublicacionRepository by lazy {
-        PublicacionRepository(dbHelper, apiClient)
+        PublicacionRepository(database.publicacionDao(), apiClient)
     }
 
-    val actividadRepository: ActividadRepository by lazy { ActividadRepository(dbHelper, apiClient) }
+    val actividadRepository: ActividadRepository by lazy { ActividadRepository(database.actividadDao(), apiClient) }
 
-    val catalogoRepository: CatalogoRepository by lazy { CatalogoRepository(dbHelper, apiClient) }
+    val catalogoRepository: CatalogoRepository by lazy { CatalogoRepository(database.catalogoDao(), apiClient) }
 }

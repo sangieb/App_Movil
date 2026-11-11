@@ -1,7 +1,9 @@
 package com.example.kompa_app.data.actividad
 
 import android.util.Log
-import com.example.kompa_app.data.db.KompaDbHelper
+import com.example.kompa_app.data.db.ActividadDao
+import com.example.kompa_app.data.db.aDominio
+import com.example.kompa_app.data.db.aEntidad
 import com.example.kompa_app.data.network.ApiClient
 import com.example.kompa_app.data.network.NominatimResult
 import kotlinx.coroutines.CancellationException
@@ -18,12 +20,12 @@ interface ActividadSource {
 }
 
 class ActividadRepository(
-    private val dbHelper: KompaDbHelper,
+    private val actividadDao: ActividadDao,
     private val apiClient: ApiClient
 ) : ActividadSource {
 
     fun obtenerLocales(): List<Actividad> =
-        dbHelper.consultarActividades()
+        actividadDao.buscar().map { it.aDominio() }
 
     override suspend fun sincronizarDesdeApi(): List<Actividad> {
         val remotas = try {
@@ -34,7 +36,7 @@ class ActividadRepository(
             Log.w(TAG, "Sincronización de actividades fallida; se conserva el caché local", e)
             return obtenerLocales()
         }
-        dbHelper.sincronizarActividades(remotas.aActividadesApi())
+        actividadDao.insertarTodas(remotas.aActividadesApi().map { it.aEntidad() })
         return obtenerLocales()
     }
 
@@ -44,15 +46,15 @@ class ActividadRepository(
         duracionMinima: Int?,
         duracionMaxima: Int?
     ): List<Actividad> =
-        dbHelper.consultarActividades(
-            texto = texto,
+        actividadDao.buscar(
+            patron = texto.trim().takeIf { it.isNotEmpty() }?.let { "%$it%" },
             origen = origen,
             duracionMinima = duracionMinima,
             duracionMaxima = duracionMaxima
-        )
+        ).map { it.aDominio() }
 
     fun guardarNueva(actividad: Actividad) {
-        dbHelper.insertarActividad(actividad)
+        actividadDao.insertar(actividad.aEntidad())
     }
 
     suspend fun nombreUbicacion(lat: Double, lon: Double): String {

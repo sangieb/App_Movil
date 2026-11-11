@@ -1,7 +1,8 @@
 package com.example.kompa_app.data.catalogo
 
 import android.util.Log
-import com.example.kompa_app.data.db.KompaDbHelper
+import com.example.kompa_app.data.db.CatalogoDao
+import com.example.kompa_app.data.db.aEntidadOrNull
 import com.example.kompa_app.data.network.ApiClient
 import com.example.kompa_app.data.network.CatalogoDto
 import kotlinx.coroutines.CancellationException
@@ -35,15 +36,15 @@ interface CatalogoSource {
 }
 
 class CatalogoRepository(
-    private val dbHelper: KompaDbHelper,
+    private val catalogoDao: CatalogoDao,
     private val apiClient: ApiClient
 ) : CatalogoSource {
 
     override fun catalogosLocales(): CatalogosRegistro =
         CatalogosRegistro(
-            nacionalidades = dbHelper.consultarCatalogos(CatalogoTipos.NACIONALIDAD),
-            idiomas = dbHelper.consultarCatalogos(CatalogoTipos.IDIOMA),
-            intereses = dbHelper.consultarCatalogos(CatalogoTipos.INTERES)
+            nacionalidades = catalogoDao.valoresDe(CatalogoTipos.NACIONALIDAD),
+            idiomas = catalogoDao.valoresDe(CatalogoTipos.IDIOMA),
+            intereses = catalogoDao.valoresDe(CatalogoTipos.INTERES)
         )
 
     override suspend fun refrescar(): CatalogosRegistro {
@@ -55,7 +56,7 @@ class CatalogoRepository(
             Log.w(TAG, "Refresco de catálogos fallido; se conserva el caché local", e)
             return catalogosLocales()
         }
-        dbHelper.reemplazarCatalogos(catalogo)
+        catalogoDao.reemplazar(catalogo.mapNotNull { it.aEntidadOrNull() })
         return catalogosLocales()
     }
 

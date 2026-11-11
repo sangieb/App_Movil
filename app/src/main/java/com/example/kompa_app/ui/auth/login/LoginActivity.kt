@@ -6,6 +6,7 @@ import android.util.Patterns
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.kompa_app.KompaApplication
 import com.example.kompa_app.R
 import com.example.kompa_app.core.util.configurarToolbar
@@ -16,6 +17,9 @@ import com.example.kompa_app.ui.auth.recuperar.RecuperarContrasenaActivity
 import com.example.kompa_app.ui.home.HomeActivity
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LoginActivity : AppCompatActivity() {
 
@@ -53,7 +57,18 @@ class LoginActivity : AppCompatActivity() {
     private fun iniciarSesion() {
         val correo = findViewById<TextInputEditText>(R.id.et_login_correo).text.toString().trim()
         val password = findViewById<TextInputEditText>(R.id.et_login_password).text.toString()
-        when (graph.authRepository.login(correo, password)) {
+        val boton = findViewById<MaterialButton>(R.id.btn_login)
+        boton.isEnabled = false
+        lifecycleScope.launch {
+            // Room no permite consultas en el hilo principal.
+            val resultado = withContext(Dispatchers.IO) { graph.authRepository.login(correo, password) }
+            boton.isEnabled = true
+            mostrarResultado(resultado)
+        }
+    }
+
+    private fun mostrarResultado(resultado: ResultadoLogin) {
+        when (resultado) {
             ResultadoLogin.EXITO -> {
                 Toast.makeText(this, getString(R.string.welcome_toast), Toast.LENGTH_SHORT).show()
                 startActivity(

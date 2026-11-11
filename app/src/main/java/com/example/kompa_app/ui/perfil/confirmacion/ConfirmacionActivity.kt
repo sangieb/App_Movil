@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.kompa_app.KompaApplication
 import com.example.kompa_app.R
 import com.example.kompa_app.core.util.configurarToolbar
@@ -13,6 +14,9 @@ import com.example.kompa_app.data.perfil.Perfil
 import com.example.kompa_app.ui.home.HomeActivity
 import com.example.kompa_app.ui.widget.animacion.AirplaneAnimationView
 import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ConfirmacionActivity : AppCompatActivity() {
 
@@ -46,15 +50,19 @@ class ConfirmacionActivity : AppCompatActivity() {
             val bundle = intent.getBundleExtra(Perfil.BUNDLE_DATOS)
             val correo = bundle?.getString(Perfil.EXTRA_CORREO).orEmpty()
             val password = bundle?.getString(Perfil.EXTRA_PASSWORD)
-            if (correo.isNotBlank() && password != null) {
-                graph.cuentaStore.registrar(correo, password)
-                graph.authRepository.crearSesion(correo)
+            btnContinuar.isEnabled = false
+            lifecycleScope.launch {
+                if (correo.isNotBlank() && password != null) {
+                    // Room no permite escrituras en el hilo principal.
+                    withContext(Dispatchers.IO) { graph.cuentaStore.registrar(correo, password) }
+                    graph.authRepository.crearSesion(correo)
+                }
+                Toast.makeText(this@ConfirmacionActivity, getString(R.string.welcome_toast), Toast.LENGTH_SHORT).show()
+                startActivity(
+                    Intent(this@ConfirmacionActivity, HomeActivity::class.java)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                )
             }
-            Toast.makeText(this, getString(R.string.welcome_toast), Toast.LENGTH_SHORT).show()
-            startActivity(
-                Intent(this, HomeActivity::class.java)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            )
         }
     }
 
