@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -49,14 +50,9 @@ dependencies {
     implementation(libs.osmdroid)
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
-    testImplementation(libs.junit)
-    testImplementation(libs.kotlinx.coroutines.test)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
-}
-
-plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.ksp)
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
 }
